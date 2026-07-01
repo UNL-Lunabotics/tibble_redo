@@ -125,7 +125,7 @@ This project utilizes [compose profiles](https://docs.docker.com/compose/how-tos
 1. `wireless` assumes you are using two computers, onboard and groundstation, to do wireless remote control of the rover. It might have some configurable IPs you have to do but should work across a variety of network channels
 2. `wired` assumes you are controlling the rover with a controller plugged into the ONBOARD computer. This setup still allows for two computers if you are SSH into onboard.
 
-**To create the container and attach a terminal shell**, run the following commands from the repository root. Or, you can use Container Tools from [Recommended VSCode Extensions](#recommended-vscode-extensions), right click on `compose.yaml`, and select Compose Up. This will build both profiles and all services, if you only want to build one profile, select Compose Up - Select Services -> Profiles -> Unselect whatever you don't want.
+**To create the container and attach a terminal shell**, run the following commands from the repository root. Or, you can use Container Tools from [Recommended VSCode Extensions](#recommended-vscode-extensions), right click on `compose.yaml`, and select Compose Up - Select Services.
 ```bash
 cd docker/ && docker compose --profile <PROFILE> up
 # Wait for it to finish creating the container...
