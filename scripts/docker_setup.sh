@@ -42,8 +42,28 @@ if [[ $LINUX == 1 ]]; then
     echo "[SUCCESS] Linux is configured. This will need to be ran every time you restart your computer."
 elif [[ $WSL == 1 ]]; then
     echo "hi wsl"
-    wget https://github.com/TheKing349/WSL2-Linux-Kernel/releases/latest/download/vmlinux+modules.zip -O ~/Downloads/VMLinuxPlusModules.zip
-    unzip -e ~/Downloads/VMLinuxPlusModules.zip -d ~/Downloads/VMLinuxPlusModules
+    echo "[REQUEST] What is your windows username? Case sensitive. Press enter to continue."
+    read -r USERNAME
+
+    DIR="/mnt/c/Users/$USERNAME"
+
+    echo "[INFO] Downloading and unzipping the custom kernel made by Aiden Kimmerling (thank you Aiden)..."
+    # wget https://github.com/TheKing349/WSL2-Linux-Kernel/releases/latest/download/vmlinux+modules.zip -O $DIR/Downloads/VMLinuxPlusModules.zip
+    # unzip -e $DIR/Downloads/VMLinuxPlusModules.zip -d $DIR/Downloads/VMLinuxPlusModules
+
+    echo "[INFO] Creating a new directory and moving folder contents there..."
+    mkdir -p "/mnt/c/Users/$USERNAME/wsl"
+    mv $DIR/Downloads/VMLinuxPlusModules/modules.vhdx $DIR/wsl
+    mv $DIR/Downloads/VMLinuxPlusModules/vmlinux $DIR/wsl
+
+    echo "[INFO] Creating the wsl configuration file.."
+    # This breaks if there's indentation just go with it
+cat << EOF > "$DIR/wsl/.wsl.config"
+[wsl2]
+kernel=C:\\Users\\$USERNAME\\wsl\\vmlinux
+kernelModules=C:\\Users\\$USERNAME\\wsl\\modules.vhdx
+EOF
+
 elif [[ $MAC == 1 ]]; then
     echo "hi mac"
 fi
