@@ -1,0 +1,49 @@
+#!/usr/bin/env bash
+
+# -----------------------------------------------------------------------------
+# FILE:         docker_setup.sh
+# AUTHOR:       Ella Moody <moodyellam@gmail.com>
+# CREATED:      07-02-2026
+# LAST EDITED:  07-02-2026
+# DESCRIPTION:  This script configures the HOST MACHINE to run the docker container
+#               setup for this repository. Run it before composing the containers,
+#               and in some cases run it anytime you restart your computer.
+#               This script does NOT install docker, it assumes it is already installed.
+# USAGE:        ./scripts/docker_setup.sh [-l] [-w] [-m]
+# DEPENDS:      bash, unzip
+# LICENSE:      Apache 2.0
+# -----------------------------------------------------------------------------
+
+set -euo pipefail
+
+# if [ "$EUID" -ne 0 ]; then
+#   echo "[ERROR] Please run this script as root (with sudo)."
+#   exit 1
+# fi
+
+LINUX=0
+WSL=0
+MAC=0
+while getopts "lwm" flag; do
+    case "${flag}" in
+        l) LINUX=1 ; echo "[INFO] Setting up Linux host machine..." ;;
+        w) WSL=1 ; echo "[INFO] Setting up WSL (Windows 11) host machine..." ;;
+        m) MAC=1 ; echo "[INFO] Setting up MacOS host machine..." ;;
+    esac
+done
+
+if [[ $((LINUX + WSL + MAC)) > 1 ]]; then
+    echo "[ERROR] Only one OS can be selected. Please only enter -l OR -w OR -m and not more than one."
+    exit 1
+fi
+
+if [[ $LINUX == 1 ]]; then
+    xhost+ local:
+    echo "[SUCCESS] Linux is configured. This will need to be ran every time you restart your computer."
+elif [[ $WSL == 1 ]]; then
+    echo "hi wsl"
+    wget https://github.com/TheKing349/WSL2-Linux-Kernel/releases/latest/download/vmlinux+modules.zip -O ~/Downloads/VMLinuxPlusModules.zip
+    unzip -e ~/Downloads/VMLinuxPlusModules.zip -d ~/Downloads/VMLinuxPlusModules
+elif [[ $MAC == 1 ]]; then
+    echo "hi mac"
+fi

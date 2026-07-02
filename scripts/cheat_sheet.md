@@ -1,0 +1,1 @@
+If you want a PDF, you can see a nice Bash SCRIPTING (not just terminal commands) cheat sheet at the PDF in this folder. If you prefer an online one, the best one I've found is one from Rico's Cheatsheets: https://devhints.io/bash
