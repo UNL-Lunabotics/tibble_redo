@@ -48,8 +48,8 @@ elif [[ $WSL == 1 ]]; then
     DIR="/mnt/c/Users/$USERNAME"
 
     echo "[INFO] Downloading and unzipping the custom kernel made by Aiden Kimmerling (thank you Aiden)..."
-    # wget https://github.com/TheKing349/WSL2-Linux-Kernel/releases/latest/download/vmlinux+modules.zip -O $DIR/Downloads/VMLinuxPlusModules.zip
-    # unzip -e $DIR/Downloads/VMLinuxPlusModules.zip -d $DIR/Downloads/VMLinuxPlusModules
+    wget https://github.com/TheKing349/WSL2-Linux-Kernel/releases/latest/download/vmlinux+modules.zip -O $DIR/Downloads/VMLinuxPlusModules.zip
+    unzip -e $DIR/Downloads/VMLinuxPlusModules.zip -d $DIR/Downloads/VMLinuxPlusModules
 
     echo "[INFO] Creating a new directory and moving folder contents there..."
     mkdir -p "/mnt/c/Users/$USERNAME/wsl"
@@ -63,6 +63,13 @@ cat << EOF > "$DIR/wsl/.wsl.config"
 kernel=C:\\Users\\$USERNAME\\wsl\\vmlinux
 kernelModules=C:\\Users\\$USERNAME\\wsl\\modules.vhdx
 EOF
+
+    echo "[REQUEST] To load the custom kernel, you have to restart WSL. This script will shut it down for you, and then you can open a terminal and type wsl to start it again."
+    echo "After restarting WSL, you can type uname -r into the WSL terminal and if the result is theking349-joystick, it was a success."
+    echo "Press ENTER to proceed when you have read all the instructions, or CTRL+C to stop."
+    read -r THROWAWAY
+
+    wsl.exe --shutdown
 
 elif [[ $MAC == 1 ]]; then
     echo "hi mac"
