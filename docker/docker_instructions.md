@@ -93,7 +93,7 @@ After installation, open Docker Desktop
 
 Currently, USB passthrough to a Docker container on MacOS is experimental and not really working. If you want to develop for this project with no USB passthrough, follow the [official Docker Desktop on Mac](https://docs.docker.com/desktop/setup/install/mac-install/) instructions. This method has not been tested and may or may not actually work at all.
 
-Instead of using Docker, it is recommended to use a virtual machine. Scripts and instructions for this have already been created at the team at https://unl-lunabotics.github.io/docs/Technical/Setup%20Dev%20Tools/macOS/.
+Instead of using Docker, it is recommended to use a virtual machine. Scripts and instructions for this have already been created by Aiden Kimmerling at https://unl-lunabotics.github.io/docs/Technical/Setup%20Dev%20Tools/macOS/.
 
 # Linux
 
@@ -119,11 +119,11 @@ services:
 
 This project uses Docker Compose. If you want to read more, you can at the [Official Docker Compose](https://docs.docker.com/compose/) documentation, but basically, it's just how we specify the configuration of the container. The actual Dockerfile specifies how to build the container and the compose is the settings.
 
-This project utilizes [compose profiles](https://docs.docker.com/compose/how-tos/profiles/), which means there are different container configurations already pre-written depending on what you want to do in the container. This project has two compose files (unless you added an override then there's three): `compose-base.yaml` and `compose.yaml`. The base compose contains all configurations that are universal to every profile, and compose-yaml contains the profiles (which extend the base). 
+This project utilizes [compose profiles](https://docs.docker.com/compose/how-tos/profiles/), which means there are different container configurations already pre-written depending on what you want to do in the container. This project has two compose files (unless you added an override then there's also compose.override.yaml): `compose-base.yaml` and `compose.yaml`. The base compose contains all configurations that are universal to every profile, and compose-yaml contains the profiles (which extend the base). 
 
-**There are three compose profiles and you HAVE to pick one one to use, there is no default.**
+**There are two compose profiles and you HAVE to pick one one to use, there is no default.**
 1. `wireless` assumes you are using two computers, onboard and groundstation, to do wireless remote control of the rover. It might have some configurable IPs you have to do but should work across a variety of network channels
-2. `wired` assumes you are controlling the rover with a controller plugged into the ONBOARD computer. This setup still allows for two computers if you are SSH into onboard.
+2. `wired` assumes you are controlling the rover with a controller plugged into the ONBOARD computer. This setup still allows for two computers if you are SSH'd into onboard and the controller is still plugged into the onboard computer.
 
 **To create the container and attach a terminal shell**, run the following commands from the repository root. Or, you can use Container Tools from [Recommended VSCode Extensions](#recommended-vscode-extensions), right click on `compose.yaml`, and select Compose Up - Select Services.
 ```bash
