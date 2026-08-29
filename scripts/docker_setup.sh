@@ -4,7 +4,7 @@
 # FILE:         docker_setup.sh
 # AUTHOR:       Ella Moody <moodyellam@gmail.com>
 # CREATED:      07-02-2026
-# LAST EDITED:  07-02-2026
+# LAST EDITED:  07-29-2026
 # DESCRIPTION:  This script configures the HOST MACHINE to run the docker container
 #               setup for this repository. Run it before composing the containers,
 #               and in some cases run it anytime you restart your computer.
@@ -28,7 +28,7 @@ while getopts "lwm" flag; do
     case "${flag}" in
         l) LINUX=1 ; echo "[INFO] Setting up Linux host machine..." ;;
         w) WSL=1 ; echo "[INFO] Setting up WSL (Windows 11) host machine..." ;;
-        m) MAC=1 ; echo "[INFO] Setting up MacOS host machine..." ;;
+        m) MAC=1 ; echo "[INFO] Setting up macOS host machine..." ;;
     esac
 done
 
@@ -41,7 +41,6 @@ if [[ $LINUX == 1 ]]; then
     xhost+ local:
     echo "[SUCCESS] Linux is configured. This will need to be ran every time you restart your computer."
 elif [[ $WSL == 1 ]]; then
-    echo "hi wsl"
     echo "[REQUEST] What is your windows username? Case sensitive. Press enter to continue."
     read -r USERNAME
 
@@ -72,5 +71,36 @@ EOF
     wsl.exe --shutdown
 
 elif [[ $MAC == 1 ]]; then
-    echo "hi mac"
+    function install_app_brew() {
+        local cmd=$1
+
+        echo "[INFO] $cmd not found. Installing using Homebrew..."
+
+        if [ ! -d "/opt/homebrew/bin" ]; then
+            echo "[ERROR] Homebrew not found. Cannot install $cmd. Install $cmd manually or install Homebrew."
+            exit 2
+        fi
+
+        brew install --cask $cmd
+    }
+
+    echo "[INFO] Opening XQuartz"
+    if ! open -Ra "XQuartz" &> /dev/null; then
+        install_app_brew XQuartz
+    fi
+
+    # Allows connections from network clients in XQuartz
+    defaults write org.xquartz.X11 nolisten_tcp -bool false
+    open -a XQuartz
+
+    # Allow only localhost connection to be accessible
+    xhost +localhost
+
+    echo "[INFO] Starting VirtualGL client"
+    if [ ! -d "/opt/VirtualGL/bin" ]; then
+        install_app_brew VirtualGL
+    fi
+    /opt/VirtualGL/bin/vglclient -detach
+
+    echo "[SUCCESS] macOS is configured. This will need to be ran every time you restart your computer."
 fi
