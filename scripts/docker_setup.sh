@@ -2,7 +2,7 @@
 
 # -----------------------------------------------------------------------------
 # FILE:         docker_setup.sh
-# AUTHOR:       Ella Moody <moodyellam@gmail.com>
+# AUTHOR:       Ella Moody <moodyellam@gmail.com> (Linux and Windows), Aiden Kimmerling <https://github.com/TheKing349> (MacOS)
 # CREATED:      07-02-2026
 # LAST EDITED:  07-29-2026
 # DESCRIPTION:  This script configures the HOST MACHINE to run the docker container
