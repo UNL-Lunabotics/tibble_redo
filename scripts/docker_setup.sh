@@ -38,7 +38,7 @@ if [[ $((LINUX + WSL + MAC)) > 1 ]]; then
 fi
 
 if [[ $LINUX == 1 ]]; then
-    xhost+ local:
+    xhost + local:
     echo "[SUCCESS] Linux is configured. This will need to be ran every time you restart your computer."
 elif [[ $WSL == 1 ]]; then
     echo "[REQUEST] What is your windows username? Case sensitive. Press enter to continue."
@@ -103,4 +103,6 @@ elif [[ $MAC == 1 ]]; then
     /opt/VirtualGL/bin/vglclient -detach
 
     echo "[SUCCESS] macOS is configured. This will need to be ran every time you restart your computer."
+else
+    echo "[ERROR] Please use either -l -w or -m for linux, windows, or mac setup."
 fi
