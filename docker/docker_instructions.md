@@ -95,6 +95,16 @@ Currently, USB passthrough to a Docker container on MacOS is experimental and no
 
 Instead of using Docker, it is recommended to use a virtual machine. Scripts and instructions for this have already been created by Aiden Kimmerling at https://unl-lunabotics.github.io/docs/Technical/Setup%20Dev%20Tools/macOS/.
 
+**IF YOU USE MACOS, ADD THIS TO YOUR compose.override.yaml FILE**
+```yaml
+services:
+  tibble_base:
+    environment:
+      - XDG_RUNTIME_DIR=/run/user/$(id -u)
+      - DISPLAY=host.docker.internal:0
+      - VGL_DISPLAY=egl
+```
+
 # Linux
 
 To install docker engine (not desktop, desktop is not available on Linux), follow this guide: https://docs.docker.com/engine/install/ for your distribution.
