@@ -72,8 +72,7 @@ RUN --mount=type=cache,target=/var/cache/apt \
 #################### CTRE PHOENIX ####################
 RUN curl -s --compressed -o /usr/share/keyrings/ctr-pubkey.gpg "https://deb.ctr-electronics.com/ctr-pubkey.gpg" && \
     curl -s --compressed -o /etc/apt/sources.list.d/ctr2026.list "https://deb.ctr-electronics.com/ctr2026.list" && \
-    sed -i 's/signed-by=/arch=amd64 signed-by=/' /etc/apt/sources.list.d/ctr2026.list
-
+    sed -i 's/\[signed-by=/[arch=amd64,arm64 signed-by=/' /etc/apt/sources.list.d/ctr2026.list
 # Cache for faster rebuilds
 RUN --mount=type=cache,target=/var/cache/apt \
     --mount=type=cache,target=/var/lib/apt \
@@ -85,6 +84,13 @@ RUN CTRE_LIB_PATH=$(dirname $(find /usr -name "libCTRE_Phoenix6.so" | head -n 1)
     echo "Found Phoenix6 at: $CTRE_LIB_PATH" && \
     echo "$CTRE_LIB_PATH" > /etc/ld.so.conf.d/ctre.conf && \
     ldconfig
+
+#################### VirtualGL ####################
+RUN wget -q -O- https://packagecloud.io/dcommander/virtualgl/gpgkey | \
+  gpg --dearmor >/etc/apt/trusted.gpg.d/VirtualGL.gpg
+RUN wget -O /etc/apt/sources.list.d/VirtualGL.list https://raw.githubusercontent.com/VirtualGL/repo/main/VirtualGL.list
+
+RUN apt-get update && apt-get install -y --no-install-recommends virtualgl
 
 #################### USER SETUP ####################
 ARG USERNAME=ubuntu
