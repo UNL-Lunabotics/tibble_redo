@@ -11,10 +11,25 @@ def generate_launch_description():
     description_pkg = FindPackageShare("description")
     bringup_pkg = FindPackageShare("bringup")
 
-    base = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource(
-            PathJoinSubstitution([FindPackageShare("bringup"), "launch_files", "base.launch.py"])
-        )
+    robot_description_content = ParameterValue(
+        Command(
+            [
+                "xacro ",
+                PathSubstitution(description_pkg) / "urdf" / "tibble.urdf.xacro",
+                " use_sim:=false",
+                " use_control:=true",
+                " use_mock_hardware:=true"
+            ]
+        ),
+        value_type=str
+    )
+    robot_description = {"robot_description": robot_description_content}
+
+    robot_state_pub_node = Node(
+        package="robot_state_publisher",
+        executable="robot_state_publisher",
+        output="both",
+        parameters=[robot_description],
     )
 
     # For joint manipulation
@@ -37,7 +52,7 @@ def generate_launch_description():
     )
 
     return LaunchDescription([
-        base,
+        robot_state_pub_node,
         joint_state_publisher_gui_node,
         rviz_node,
     ])

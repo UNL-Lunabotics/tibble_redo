@@ -5,4 +5,3 @@ log
 .venv
 .env
 compose.override.yaml
-.DS_STORE
