@@ -8,6 +8,8 @@ from launch_ros.substitutions import FindPackageShare
 from launch_ros.parameter_descriptions import ParameterFile
 
 def generate_launch_description():
+    control_pkg = FindPackageShare("control")
+
     # Launch Arguments
     use_sim = DeclareLaunchArgument(
         'use_sim',
@@ -32,7 +34,7 @@ def generate_launch_description():
         "xacro",
         " ",
         PathSubstitution(FindPackageShare("description")),
-        "/urdf/tootles.urdf.xacro",
+        "/urdf/tibble.urdf.xacro",
         " use_sim:=",
         LaunchConfiguration('use_sim'),
         " use_control:=",
@@ -59,18 +61,6 @@ def generate_launch_description():
         name="foxglove_bridge",
     )
     
-    depth_to_pointcloud = Node(
-        package='depth_image_proc',
-        executable='point_cloud_xyz_node',
-        name='depth_to_pointcloud',
-        remappings=[
-            ('image_rect', 'camera/depth_image'),
-            ('camera_info', 'camera/camera_info'),
-            ('points', 'camera/points_corrected'),
-        ],
-        parameters=[{'use_sim_time': True}],
-    )
-
     diff_drive_spawner = Node(
         package="controller_manager",
         executable="spawner",
@@ -107,7 +97,7 @@ def generate_launch_description():
         executable='teleop_node',
         name = 'teleop_node',
         parameters=[
-            PathSubstitution(FindPackageShare("bringup"))
+            PathSubstitution(FindPackageShare("control"))
             / "config"
             / "joystick.yaml"
         ]
@@ -119,7 +109,6 @@ def generate_launch_description():
         use_mock_hardware,
         rsp,
         foxglove_bridge,
-        depth_to_pointcloud,
         diff_drive_spawner,
         joint_broad_spawner,
         joy_node,
