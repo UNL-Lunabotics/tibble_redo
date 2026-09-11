@@ -9,15 +9,42 @@ from launch_ros.parameter_descriptions import ParameterFile
 
 
 def generate_launch_description():
+    # Launch Arguments
+    use_sim = DeclareLaunchArgument(
+        'use_sim',
+        default_value='false',
+        description='Whether to use simulation time or real time.'
+    )
+
+    use_control = DeclareLaunchArgument(
+        'use_control',
+        default_value='true',
+        description='Whether to use ROS2 Control.'
+    )
+
+    use_mock_hardware = DeclareLaunchArgument(
+        'use_mock_hardware',
+        default_value='false',
+        description='Whether to use mock hardware or real hardware.'
+    )
+
     # Robot State Publisher
     robot_description_content = Command(
         [
             "xacro",
             " ",
             PathSubstitution(FindPackageShare("description")),
-            "/urdf/tootles.urdf.xacro"
+            "/urdf/tootles.urdf.xacro",
+            " use_sim:=",
+            LaunchConfiguration('use_sim'),
+            " use_control:=",
+            LaunchConfiguration('use_control'),
+            " use_mock_hardware:=",
+            LaunchConfiguration('use_mock_hardware'),
+
         ]
     )
+
     rsp = Node(
         package="robot_state_publisher",
         executable="robot_state_publisher",
@@ -26,7 +53,7 @@ def generate_launch_description():
             {"robot_description": robot_description_content, "use_sim_time": True}
         ],
     )
-    controllers_config = PathJoinSubstitution([FindPackageShare("bringup"), "config", "controllers.yaml"])
+    controllers_config = PathJoinSubstitution([FindPackageShare("control"), "config", "gamepad.yaml"])
 
     foxglove_bridge = Node(
         package="foxglove_bridge",
@@ -69,6 +96,13 @@ def generate_launch_description():
         parameters=[{'use_sim_time': True}],
     )
 
+    twist_mux_node = Node(
+        package="twist_mux",
+        executable="twist_mux",
+        parameters=[twist_mux_params],
+        remappings=[('/cmd_vel_out','/cmd_vel')]
+    )
+
     teleop_node = Node(
         package='teleop_twist_joy', 
         executable='teleop_node',
@@ -80,14 +114,16 @@ def generate_launch_description():
         ]
     )
 
-    return LaunchDescription(
-        [
-            rsp,
-            foxglove_bridge,
-            depth_to_pointcloud,
-            diff_drive_spawner,
-            joint_broad_spawner,
-            joy_node,
-            teleop_node,
-        ]
-    )
+    return LaunchDescription([
+        use_sim,
+        use_control,
+        use_mock_hardware,
+        rsp,
+        foxglove_bridge,
+        depth_to_pointcloud,
+        diff_drive_spawner,
+        joint_broad_spawner,
+        joy_node,
+        twist_mux_node,
+        teleop_node,
+    ])
