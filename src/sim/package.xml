@@ -17,6 +17,7 @@
   <exec_depend>mujoco_ros2_control_msgs</exec_depend>
   <exec_depend>mujoco_ros2_control_plugins</exec_depend>
   <exec_depend>mujoco_vendor</exec_depend>
+  <exec_depend>depth_image_proc</exec_depend>
 
   <export>
     <build_type>ament_python</build_type>

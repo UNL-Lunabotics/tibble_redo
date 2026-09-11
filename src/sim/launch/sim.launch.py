@@ -16,8 +16,13 @@ def generate_launch_description():
 
     base = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
-            PathJoinSubstitution([FindPackageShare("sim"), "launch", "base.launch.py"])
-        )
+            PathJoinSubstitution([FindPackageShare("bringup"), "launch_files", "base.launch.py"]),
+        ),
+        launch_arguments={
+            "use_sim": "true",
+            "use_control": "true",
+            "use_mock_hardware": "false",
+        }.items(),
     )
 
     mujoco_scene = PathJoinSubstitution([FindPackageShare("sim"), "worlds", world])
@@ -39,7 +44,7 @@ def generate_launch_description():
         output="both",
         parameters=[
             {"use_sim_time": True},
-            ParameterFile(PathJoinSubstitution([FindPackageShare("bringup"), "config", "controllers.yaml"])),
+            ParameterFile(PathJoinSubstitution([FindPackageShare("control"), "config", "gamepad.yaml"])),
             ParameterFile(PathJoinSubstitution([FindPackageShare("sim"), "config", "mujoco_plugins.yaml"])),
         ],
     )
