@@ -50,6 +50,8 @@ def generate_launch_description():
         ],
     )
     controllers_config = PathJoinSubstitution([FindPackageShare("control"), "config", "gamepad.yaml"])
+    joy_params = PathSubstitution(control_pkg) / "config" / "joystick.yaml"
+    twist_mux_params = PathSubstitution(control_pkg) / "config" / "twist_mux.yaml"
 
     foxglove_bridge = Node(
         package="foxglove_bridge",
@@ -89,7 +91,8 @@ def generate_launch_description():
     joy_node = Node(
         package='joy',
         executable='joy_node',
-        parameters=[{'use_sim_time': True}],
+        name='game_controller_node',
+        parameters=[joy_params]
     )
 
     twist_mux_node = Node(
