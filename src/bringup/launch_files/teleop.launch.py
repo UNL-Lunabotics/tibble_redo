@@ -28,11 +28,26 @@ def generate_launch_description():
         arguments=["tibble_controller", "--controller-manager", "/controller_manager"],
     )
 
+    joint_state_broadcaster_spawner = Node(
+        package="controller_manager",
+        executable="spawner",
+        arguments=["joint_state_broadcaster", "--controller-manager", "/controller_manager"],
+    )
+
     delay_tibble_controller_spawner = RegisterEventHandler(
         event_handler=OnProcessExit(
             target_action=joint_state_broadcaster_spawner,
             on_exit=[tibble_controller_spawner],
         )
+    )
+
+    control_node = Node(
+        package="controller_manager",
+        executable="ros2_control_node",
+        parameters=[
+            PathSubstitution(control_pkg) / "config" / "tibble_controller.yaml"
+        ],
+        output="both",
     )
 
     rviz_node = Node(
