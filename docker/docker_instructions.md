@@ -46,7 +46,7 @@ You can follow the [official Windows WSL install instructions](https://learn.mic
 3. Restart your computer
 4. Open PowerShell again (admin mode not required)
 5. Type in the command `wsl --list --online` to view the available Linux distributions
-6. Type in the command `wsl --install --Ubuntu-24.04`
+6. Type in the command `wsl --install Ubuntu-24.04`
 7. Type in your Unix username (doesn't really matter)
 8. Type in your Unix password (remember this you will be typing it a lot, or write it down)
 9. Close that PowerShell window and do not continue working in it or it'll break things
