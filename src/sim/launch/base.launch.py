@@ -9,22 +9,13 @@ from launch_ros.parameter_descriptions import ParameterFile
 
 
 def generate_launch_description():
-    use_gazebo_arg = DeclareLaunchArgument(
-        'use_gazebo',
-        default_value='false',
-        description='Use Gazebo sim if true. Otherwise default to MuJoCo'
-    )
-
     # Robot State Publisher
     robot_description_content = Command(
         [
             "xacro",
             " ",
             PathSubstitution(FindPackageShare("description")),
-            "/urdf/tootles.urdf.xacro",
-            " ",
-            "use_gazebo:=",
-            LaunchConfiguration('use_gazebo')
+            "/urdf/tootles.urdf.xacro"
         ]
     )
     rsp = Node(
@@ -91,7 +82,6 @@ def generate_launch_description():
 
     return LaunchDescription(
         [
-            use_gazebo_arg,
             rsp,
             foxglove_bridge,
             depth_to_pointcloud,

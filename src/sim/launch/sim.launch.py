@@ -1,44 +1,55 @@
 from launch import LaunchDescription
-from launch.actions import IncludeLaunchDescription, DeclareLaunchArgument
-from launch.conditions import IfCondition, UnlessCondition
+from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription
 from launch.launch_description_sources import PythonLaunchDescriptionSource
-from launch.substitutions import PathJoinSubstitution, LaunchConfiguration
+from launch.substitutions import LaunchConfiguration, PathJoinSubstitution
+from launch_ros.actions import Node
 from launch_ros.substitutions import FindPackageShare
+from launch_ros.parameter_descriptions import ParameterFile
 
 def generate_launch_description():
-    use_gazebo_arg = DeclareLaunchArgument(
-        'use_gazebo',
-        default_value='false',
-        description='Use Gazebo sim if true. Otherwise default to MuJoCo'
-    )
-    use_gazebo = LaunchConfiguration('use_gazebo')
-
     world_arg = DeclareLaunchArgument(
         'world',
         default_value='world',
         description='The scene to load in'
     )
-    world = LaunchConfiguration('world')
+    world = [LaunchConfiguration('world'), ".mjcf"]
 
-    gazebo = IncludeLaunchDescription(
+    base = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
-            PathJoinSubstitution([FindPackageShare("sim"), "launch", "gazebo.launch.py"])
+            PathJoinSubstitution([FindPackageShare("sim"), "launch", "base.launch.py"])
         ),
-        condition=IfCondition(use_gazebo),
-        launch_arguments={"world": world}.items(),
+        launch_arguments={"use_gazebo": "false"}.items()
     )
 
-    mujoco = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource(
-            PathJoinSubstitution([FindPackageShare("sim"), "launch", "mujoco.launch.py"])
-        ),
-        condition=UnlessCondition(use_gazebo),
-        launch_arguments={"world": world}.items(),
+    mujoco_scene = PathJoinSubstitution([FindPackageShare("sim"), "worlds", world])
+
+    mujoco_robot_description = Node(
+        package="mujoco_ros2_control",
+        executable="robot_description_to_mjcf.sh",
+        output="both",
+        arguments=[
+            "--add_free_joint",
+            "--scene", mujoco_scene,
+            "--publish_topic", "/mujoco_robot_description",
+        ],
     )
 
-    return LaunchDescription([
-        use_gazebo_arg,
-        world_arg,
-        gazebo,
-        mujoco,
-    ])
+    control_node = Node(
+        package="mujoco_ros2_control",
+        executable="ros2_control_node",
+        output="both",
+        parameters=[
+            {"use_sim_time": True},
+            ParameterFile(PathJoinSubstitution([FindPackageShare("bringup"), "config", "controllers.yaml"])),
+            ParameterFile(PathJoinSubstitution([FindPackageShare("sim"), "config", "mujoco_plugins.yaml"])),
+        ],
+    )
+
+    return LaunchDescription(
+        [
+            world_arg,
+            base,
+            mujoco_robot_description,
+            control_node,
+        ]
+    )
