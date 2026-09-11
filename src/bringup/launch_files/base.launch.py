@@ -7,7 +7,6 @@ from launch_ros.actions import Node
 from launch_ros.substitutions import FindPackageShare
 from launch_ros.parameter_descriptions import ParameterFile
 
-
 def generate_launch_description():
     # Launch Arguments
     use_sim = DeclareLaunchArgument(
@@ -29,21 +28,18 @@ def generate_launch_description():
     )
 
     # Robot State Publisher
-    robot_description_content = Command(
-        [
-            "xacro",
-            " ",
-            PathSubstitution(FindPackageShare("description")),
-            "/urdf/tootles.urdf.xacro",
-            " use_sim:=",
-            LaunchConfiguration('use_sim'),
-            " use_control:=",
-            LaunchConfiguration('use_control'),
-            " use_mock_hardware:=",
-            LaunchConfiguration('use_mock_hardware'),
-
-        ]
-    )
+    robot_description_content = Command([
+        "xacro",
+        " ",
+        PathSubstitution(FindPackageShare("description")),
+        "/urdf/tootles.urdf.xacro",
+        " use_sim:=",
+        LaunchConfiguration('use_sim'),
+        " use_control:=",
+        LaunchConfiguration('use_control'),
+        " use_mock_hardware:=",
+        LaunchConfiguration('use_mock_hardware'),
+    ])
 
     rsp = Node(
         package="robot_state_publisher",
