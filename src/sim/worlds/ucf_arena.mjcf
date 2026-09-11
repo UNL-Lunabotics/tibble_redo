@@ -1,0 +1,22 @@
+<mujoco model="ucf_arena">
+  <visual>
+    <headlight ambient="0.4 0.4 0.4" diffuse="0.4 0.4 0.4" specular="0.1 0.1 0.1" />
+    <rgba fog="0.07 0.07 0.07 1" />
+    <global offwidth="1920" offheight="1080" />
+  </visual>
+
+  <!-- PUT NEW MESHES HERE FOR UCF -->
+  <include file="/workspaces/tootles/ros2/sim/worlds/meshes/ucf_arena/arena_barriers/arena_barriers.xml" />
+  <include file="/workspaces/tootles/ros2/sim/worlds/meshes/ucf_arena/arena_rods/arena_rods.xml" />
+  <include file="/workspaces/tootles/ros2/sim/worlds/meshes/ucf_arena/arena_walls/arena_walls.xml" />
+  <include file="/workspaces/tootles/ros2/sim/worlds/meshes/ucf_arena/arena_windows/arena_windows.xml" />
+
+  <include file="/workspaces/tootles/ros2/sim/worlds/meshes/ucf_arena/lunar_surface_better/lunar_surface.xml" />
+
+  <!-- <include file="/workspaces/tootles/ros2/sim/worlds/meshes/core/rock_rough/rock_rough.xml" /> -->
+
+  <worldbody>
+    <light name="sun" directional="true" pos="0 0 10" dir="-0.5 0.1 -0.9"
+      diffuse="0.4 0.4 0.4" specular="0.1 0.1 0.1" />
+  </worldbody>
+</mujoco>
