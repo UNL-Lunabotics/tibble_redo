@@ -17,8 +17,7 @@ def generate_launch_description():
     base = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
             PathJoinSubstitution([FindPackageShare("sim"), "launch", "base.launch.py"])
-        ),
-        launch_arguments={"use_gazebo": "false"}.items()
+        )
     )
 
     mujoco_scene = PathJoinSubstitution([FindPackageShare("sim"), "worlds", world])
