@@ -47,10 +47,17 @@ RUN --mount=type=cache,target=/var/cache/apt \
     libegl1-mesa-dev \
     libglu1-mesa-dev \
     libxv1 \
-    libxtst6
+    libxtst6 \
+    # Rerun ROS2 message conversion helpers
+    ros-${ROS_DISTRO}-cv-bridge \
+    ros-${ROS_DISTRO}-image-geometry \
+    ros-${ROS_DISTRO}-laser-geometry
 
 #################### PLATFORMIO ####################
 RUN pipx install platformio && pipx ensurepath
+
+#################### RERUN ####################
+RUN python3 -m pip install --no-cache-dir --break-system-packages --ignore-installed rerun-sdk
 
 #################### ROS PACKAGES ####################
 # The .dockerignore will only allow package.xml files to be copied over
@@ -64,10 +71,10 @@ RUN --mount=type=cache,target=/var/cache/apt \
     apt-get update && \
     rosdep update && \
     rosdep install \
-      --from-paths /workspaces/tibble_redo/src \
-      --ignore-src \
-      --rosdistro ${ROS_DISTRO} \
-      -y
+    --from-paths /workspaces/tibble_redo/src \
+    --ignore-src \
+    --rosdistro ${ROS_DISTRO} \
+    -y
 
 #################### CTRE PHOENIX ####################
 RUN curl -s --compressed -o /usr/share/keyrings/ctr-pubkey.gpg "https://deb.ctr-electronics.com/ctr-pubkey.gpg" && \
@@ -87,7 +94,7 @@ RUN CTRE_LIB_PATH=$(dirname $(find /usr -name "libCTRE_Phoenix6.so" | head -n 1)
 
 #################### VirtualGL ####################
 RUN wget -q -O- https://packagecloud.io/dcommander/virtualgl/gpgkey | \
-  gpg --dearmor >/etc/apt/trusted.gpg.d/VirtualGL.gpg
+    gpg --dearmor >/etc/apt/trusted.gpg.d/VirtualGL.gpg
 RUN wget -O /etc/apt/sources.list.d/VirtualGL.list https://raw.githubusercontent.com/VirtualGL/repo/main/VirtualGL.list
 
 RUN apt-get update && apt-get install -y --no-install-recommends virtualgl
@@ -98,8 +105,8 @@ ARG USER_UID=1000
 ARG USER_GID=$USER_UID
 
 RUN if ! id -u $USER_UID >/dev/null 2>&1; then \
-        groupadd --gid $USER_GID $USERNAME && \
-        useradd -s /bin/bash --uid $USER_UID --gid $USER_GID -m $USERNAME; \
+    groupadd --gid $USER_GID $USERNAME && \
+    useradd -s /bin/bash --uid $USER_UID --gid $USER_GID -m $USERNAME; \
     fi && \
     echo "$USERNAME ALL=(root) NOPASSWD:ALL" > /etc/sudoers.d/$USERNAME && \
     chmod 0440 /etc/sudoers.d/$USERNAME

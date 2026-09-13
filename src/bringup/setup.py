@@ -28,6 +28,7 @@ setup(
     },
     entry_points={
         'console_scripts': [
+            'rerun_bridge = bringup.rerun_bridge:main',
         ],
     },
 )

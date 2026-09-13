@@ -101,6 +101,13 @@ def generate_launch_description():
         condition=IfCondition(LaunchConfiguration("gui")),
     )
 
+    rerun_bridge_node = Node(
+        package="bringup",
+        executable="rerun_bridge",
+        name="rerun_bridge",  # <-- ADDED TO LAUNCH LIST
+        output="screen",
+    )
+
     # state_manager_node = Node(
     #     package='control',
     #     executable='state_manager_node',
@@ -110,13 +117,14 @@ def generate_launch_description():
 
     return LaunchDescription([
         DeclareLaunchArgument("gui", default_value="false"),
-        # joy_node,
-        # teleop_node,
+        joy_node,
+        teleop_node,
         # twist_mux_node,
         control_node,
         robot_state_pub_node,
         joint_state_broadcaster_spawner,
         delay_tibble_controller_spawner,
+        rerun_bridge_node,
         # rviz_node,
         # state_manager_node
     ])
