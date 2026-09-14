@@ -37,7 +37,7 @@ def generate_launch_description():
         "xacro",
         " ",
         description_pkg,
-        "/urdf/tootles.urdf.xacro",
+        "/urdf/tibble.urdf.xacro",
         " use_sim:=",
         LaunchConfiguration('use_sim'),
         " use_control:=",
@@ -64,17 +64,17 @@ def generate_launch_description():
         name="foxglove_bridge",
     )
     
-    depth_to_pointcloud = Node(
-        package='depth_image_proc',
-        executable='point_cloud_xyz_node',
-        name='depth_to_pointcloud',
-        remappings=[
-            ('image_rect', 'camera/depth_image'),
-            ('camera_info', 'camera/camera_info'),
-            ('points', 'camera/points_corrected'),
-        ],
-        parameters=[{'use_sim_time': True}],
-    )
+    # depth_to_pointcloud = Node(
+    #     package='depth_image_proc',
+    #     executable='point_cloud_xyz_node',
+    #     name='depth_to_pointcloud',
+    #     remappings=[
+    #         ('image_rect', 'camera/depth_image'),
+    #         ('camera_info', 'camera/camera_info'),
+    #         ('points', 'camera/points_corrected'),
+    #     ],
+    #     parameters=[{'use_sim_time': True}],
+    # )
 
     diff_drive_spawner = Node(
         package="controller_manager",
@@ -124,7 +124,7 @@ def generate_launch_description():
         use_mock_hardware,
         rsp,
         foxglove_bridge,
-        depth_to_pointcloud,
+        # depth_to_pointcloud,
         diff_drive_spawner,
         joint_broad_spawner,
         joy_node,
