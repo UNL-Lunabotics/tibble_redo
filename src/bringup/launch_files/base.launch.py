@@ -8,6 +8,11 @@ from launch_ros.substitutions import FindPackageShare
 from launch_ros.parameter_descriptions import ParameterFile
 
 def generate_launch_description():
+    # Packages
+    control_pkg = FindPackageShare("control")
+    bringup_pkg = FindPackageShare("bringup")
+    description_pkg = FindPackageShare("description")
+
     # Launch Arguments
     use_sim = DeclareLaunchArgument(
         'use_sim',
@@ -31,7 +36,7 @@ def generate_launch_description():
     robot_description_content = Command([
         "xacro",
         " ",
-        PathSubstitution(FindPackageShare("description")),
+        description_pkg,
         "/urdf/tootles.urdf.xacro",
         " use_sim:=",
         LaunchConfiguration('use_sim'),
@@ -49,9 +54,9 @@ def generate_launch_description():
             {"robot_description": robot_description_content, "use_sim_time": True}
         ],
     )
-    controllers_config = PathJoinSubstitution([FindPackageShare("control"), "config", "gamepad.yaml"])
-    joy_params = PathSubstitution(control_pkg) / "config" / "joystick.yaml"
-    twist_mux_params = PathSubstitution(control_pkg) / "config" / "twist_mux.yaml"
+    controllers_config = PathJoinSubstitution([control_pkg, "config", "gamepad.yaml"])
+    joy_params = control_pkg / "config" / "joystick.yaml"
+    twist_mux_params = control_pkg / "config" / "twist_mux.yaml"
 
     foxglove_bridge = Node(
         package="foxglove_bridge",
@@ -107,7 +112,7 @@ def generate_launch_description():
         executable='teleop_node',
         name = 'teleop_node',
         parameters=[
-            PathSubstitution(FindPackageShare("bringup"))
+            bringup_pkg
             / "config"
             / "joystick.yaml"
         ]
