@@ -1,3 +1,3 @@
-# Ignore everything except package files
+# Ignore everything except package.xml files
 src/**
 !src/**/package.xml
