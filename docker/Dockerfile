@@ -62,7 +62,6 @@ RUN pipx install platformio && pipx ensurepath
 
 
 #################### USER SETUP ####################
-
 # This needs to run before COPY so you can use the variables
 RUN if ! id -u $USER_UID >/dev/null 2>&1; then \
     groupadd --gid $USER_GID $USERNAME && \
@@ -95,6 +94,7 @@ RUN --mount=type=cache,target=/var/cache/apt \
 
 
 #################### CTRE PHOENIX ####################
+# This is the sdk/api we use to communicate with the TalonFX motor controller
 RUN curl -s --compressed -o /usr/share/keyrings/ctr-pubkey.gpg "https://deb.ctr-electronics.com/ctr-pubkey.gpg" && \
     curl -s --compressed -o /etc/apt/sources.list.d/ctr2026.list "https://deb.ctr-electronics.com/ctr2026.list" && \
     sed -i 's/\[signed-by=/[arch=amd64,arm64 signed-by=/' /etc/apt/sources.list.d/ctr2026.list
@@ -104,7 +104,7 @@ RUN --mount=type=cache,target=/var/cache/apt \
     apt-get update && \
     apt-get install -y --no-install-recommends phoenix6
 
-# Required for CTRE (the TalonFX motor API/SDK) to build correctly with colcon
+# Required for CTRE to build correctly with colcon
 RUN CTRE_LIB_PATH=$(dirname $(find /usr -name "libCTRE_Phoenix6.so" | head -n 1)) && \
     echo "Found Phoenix6 at: $CTRE_LIB_PATH" && \
     echo "$CTRE_LIB_PATH" > /etc/ld.so.conf.d/ctre.conf && \
@@ -112,7 +112,6 @@ RUN CTRE_LIB_PATH=$(dirname $(find /usr -name "libCTRE_Phoenix6.so" | head -n 1)
 
 
 #################### VirtualGL ####################
-
 # VirtualGL is required for MacOS to run GUI apps in a docker container
 RUN wget -q -O- https://packagecloud.io/dcommander/virtualgl/gpgkey | \
     gpg --dearmor >/etc/apt/trusted.gpg.d/VirtualGL.gpg
@@ -122,7 +121,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends virtualgl
 
 
 #################### ROS ENV ####################
-
 # This is required for SSHing into the container and having source set up
 # It applies the source command system-wide to every user in the container
 RUN echo "source /opt/ros/${ROS_DISTRO}/setup.bash" \
@@ -135,4 +133,5 @@ WORKDIR /home/${USERNAME}/workspaces/${REPO_NAME}/
 
 # This step sources the underlay and overlay so you can immediately run ros2 launch commands (if it's already built)
 RUN printf "\nsource /opt/ros/${ROS_DISTRO}/setup.bash\n" >> ~/.bashrc && \
-    printf "if [ -f home/${USERNAME}/workspaces/${REPO_NAME}/install/setup.bash ]; then source home/${USERNAME}/workspaces/${REPO_NAME}/install/setup.bash; fi\n" >> ~/.bashrc
+    # This is an if statement since if the repo has never been built before it would error out
+    printf "if [ -f /home/${USERNAME}/workspaces/${REPO_NAME}/install/setup.bash ]; then source /home/${USERNAME}/workspaces/${REPO_NAME}/install/setup.bash; fi\n" >> ~/.bashrc
