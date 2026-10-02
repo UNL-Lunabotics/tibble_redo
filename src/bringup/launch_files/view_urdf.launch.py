@@ -32,7 +32,7 @@ def generate_launch_description():
     )
 
     return LaunchDescription([
-        base,
+        robot_state_pub_node,
         joint_state_publisher_gui_node,
         rviz_node,
     ])
