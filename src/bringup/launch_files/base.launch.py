@@ -55,21 +55,16 @@ def generate_launch_description():
     joy_params = PathSubstitution(control_pkg) / "config" / "joystick.yaml"
     twist_mux_params = PathSubstitution(control_pkg) / "config" / "twist_mux.yaml"
     
-    diff_drive_spawner = Node(
+    tibble_controller_spawner = Node(
         package="controller_manager",
         executable="spawner",
-        arguments=[
-            "diff_cont",
-            '--controller-ros-args',
-            '-r /diff_cont/cmd_vel:=/cmd_vel',
-             "--param-file", controllers_config
-        ],
+        arguments=["tibble_controller", "--controller-manager", "/controller_manager"],
     )
 
-    joint_broad_spawner = Node(
+    joint_state_broadcaster_spawner = Node(
         package="controller_manager",
         executable="spawner",
-        arguments=["joint_broad", "--param-file", controllers_config],
+        arguments=["joint_state_broadcaster", "--controller-manager", "/controller_manager"],
     )
 
     joy_node = Node(
@@ -102,8 +97,8 @@ def generate_launch_description():
         use_control,
         use_mock_hardware,
         rsp,
-        diff_drive_spawner,
-        joint_broad_spawner,
+        tibble_controller_spawner,
+        joint_state_broadcaster_spawner,
         joy_node,
         twist_mux_node,
         teleop_node,
