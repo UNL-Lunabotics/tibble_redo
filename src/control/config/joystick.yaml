@@ -10,20 +10,20 @@ teleop_node:
     frame: 'base_link'
     
     # Axis mappings
-    axis_linear:  # Left thumb stick vertical
-      x: LEFTY
+    axis_linear:
+      x: 1                 # LEFTY
     scale_linear:
       x: 1.0
     scale_linear_turbo:
       x: 1.0
 
-    axis_angular:  # right thumb stick horizontal
-      yaw: RIGHTX
+    axis_angular:
+      yaw: 2               # RIGHTX
     scale_angular:
       yaw: 1.0
     scale_angular_turbo:
       yaw: 1.0
 
-    # Button Mappings
+    # Button mappings
     require_enable_button: true
-    enable_button: START
+    enable_button: 6       # START

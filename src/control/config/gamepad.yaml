@@ -3,25 +3,25 @@ command_center_node:
     # Mappings can be found under the game_controller_node index map https://index.ros.org/p/joy/
     
     # Universal buttons
-    enable_b: START
-    panic_b: BACK     # Sometimes listed as SELECT on controllers
+    enable_b: 6        # START
+    panic_b: 4         # BACK
 
     # These buttons swap what mode the command center is in
     modes:
-      state_machine_b: DPAD_UP
-      manual_b: DPAD_DOWN
-      autonomy_b: DPAD_RIGHT
+      state_machine_b: 11   # DPAD_UP
+      manual_b: 12          # DPAD_DOWN
+      autonomy_b: 14        # DPAD_RIGHT
 
       # Mode specific button mappings (can overlap)
       state_machine:
-        idle_b: A
-        travel_b: B
-        excavate_b: X
-        deposit_b: Y
+        idle_b: 0            # A
+        travel_b: 1          # B
+        excavate_b: 2        # X
+        deposit_b: 3         # Y
+
       manual:
-        la_extend_b: A
-        la_retract_b: Y
-        latch_toggle_b: X
-        vibe_toggle_b: B
-        excav_axis: TRIGGERRIGHT
-    
+        la_extend_b: 0       # A
+        la_retract_b: 3      # Y
+        latch_toggle_b: 2    # X
+        vibe_toggle_b: 1     # B
+        excav_axis: 5        # TRIGGERRIGHT
