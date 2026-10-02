@@ -1,130 +1,338 @@
-import rclpy
-from rclpy.node import Node
-from rclpy.qos import QoSProfile, QoSDurabilityPolicy, QoSReliabilityPolicy
-from std_msgs.msg import String
-from tf2_msgs.msg import TFMessage
-from nav_msgs.msg import Odometry
-from sensor_msgs.msg import JointState
+#!/usr/bin/env python3
+"""
+Simple example of a ROS node that republishes some common types to Rerun.
+
+The solution here is mostly a toy example to show how ROS concepts can be
+mapped to Rerun. For more information on future improved ROS support,
+see the tracking issue: <https://github.com/rerun-io/rerun/issues/1537>.
+
+NOTE: Unlike many of the other examples, this example requires a system installation of ROS
+in addition to the packages from requirements.txt.
+
+To use this you need to have rerun installed:
+    pip install rerun-sdk
+"""
+
+# This code was taken from the examples page for how to bridge ROS2 topics to Rerun
+# A few minor changes have been made to make it compatible with Docker Containers
+# and to remove some of the topics that are not used by Tootles.
+# Source: https://github.com/rerun-io/rerun/blob/latest/examples/python/ros_node/main.py
+
+# When you start the visualizer, open this link in your browser to use it:
+# http://localhost:9090/?url=rerun%2Bhttp%3A%2F%2Flocalhost%3A9876%2Fproxy
+
+from __future__ import annotations
+
+import argparse
+import sys
+from collections.abc import Callable
+
+import numpy as np
+
 import rerun as rr
+from rerun.components import Colormap
 
-# This is vibe coded as heck if someone wants to improve on it please do so
-class RerunUrdfBridge(Node):
-    def __init__(self):
-        super().__init__("rerun_urdf_bridge")
+try:
+    import cv_bridge
+    import laser_geometry
+    import rclpy
+    from image_geometry import PinholeCameraModel
+    from nav_msgs.msg import OccupancyGrid, Odometry
+    from numpy.lib.recfunctions import structured_to_unstructured
+    from rclpy.callback_groups import ReentrantCallbackGroup
+    from rclpy.node import Node
+    from rclpy.qos import QoSDurabilityPolicy, QoSProfile
+    from rclpy.time import Time
+    from sensor_msgs.msg import CameraInfo, Image, LaserScan
+    from sensor_msgs_py import point_cloud2
+    from std_msgs.msg import String
+    from tf2_msgs.msg import TFMessage
 
-        rr.init("tibble_rerun_bridge")
-        server_uri = rr.serve_grpc()
-        rr.serve_web_viewer(connect_to=server_uri)
+except ImportError:
+    print(
+        '''
+Could not import the required ROS2 packages.
 
-        # Dictionary to track parent-child frame relationships for building the TF tree
-        self.frame_parents = {}
+Make sure you have installed ROS2 (https://docs.ros.org/en/jazzy/index.html)
+and sourced /opt/ros/jazzy/setup.bash
+''',
+    )
+    sys.exit(1)
 
-        # --- QoS Profiles ---
-        # robot_description and tf_static are published latched (transient local)
-        transient_local_qos = QoSProfile(
-            depth=1,
-            durability=QoSDurabilityPolicy.TRANSIENT_LOCAL,
-            reliability=QoSReliabilityPolicy.RELIABLE,
+
+class RobotSubscriber(Node):  # type: ignore[misc]
+    def __init__(self) -> None:
+        super().__init__("rr_turtlebot")
+
+        # Assorted helpers for data conversions
+        self.pinhole_model = PinholeCameraModel()
+        self.cv_bridge = cv_bridge.CvBridge()
+        self.laser_proj = laser_geometry.laser_geometry.LaserProjection()
+        self.subscribers: list[rclpy.Subscription] = []
+
+        # Subscribe to the topics we want to republish to Rerun.
+        # See the callback methods below for how each message type is handled.
+        self.subscribe("/tf", TFMessage, self.tf_callback)
+        self.subscribe("/tf_static", TFMessage, self.tf_callback, latching=True)
+        self.subscribe("/diff_cont/odom", Odometry, self.odom_callback)
+        self.subscribe("/scan", LaserScan, self.scan_callback)
+        self.subscribe("/camera/camera_info", CameraInfo, self.cam_info_callback)
+        self.subscribe("/camera/image", Image, self.image_callback)
+        self.subscribe("/camera/depth_image", Image, self.depth_callback)
+        self.subscribe("/robot_description", String, self.urdf_callback, latching=True)        
+        # The OccupancyGrid topics are not used by Tootles, but they are needed if 
+        # you ever want to visuallize any kinds of maps in rerun.
+        """
+        self.subscribe(
+            "/map",
+            OccupancyGrid,
+            lambda grid: self.occupancy_grid_callback("/map", grid, Colormap.RvizMap, draw_order=1.0),
+            latching=True,
+        )
+        self.subscribe(
+            "/global_costmap/costmap",
+            OccupancyGrid,
+            lambda grid: self.occupancy_grid_callback(
+                "/global_costmap_costmap", grid, Colormap.RvizCostmap, draw_order=2.0, opacity=0.75
+            ),
+        )
+        self.subscribe(
+            "/local_costmap/costmap",
+            OccupancyGrid,
+            lambda grid: self.occupancy_grid_callback(
+                "/local_costmap_costmap", grid, Colormap.RvizCostmap, draw_order=3.0, opacity=0.75
+            ),
+        )
+        """
+
+    def subscribe(
+        self, topic: str, msg_type: type, callback: Callable[[rclpy.MsgT], None], latching: bool = False
+    ) -> None:
+        """Adds a subscriber to a topic with the given message type and callback."""
+        # `qos_profile` can either be an int (history depth) or a QoSProfile.
+        # See: https://docs.ros.org/en/rolling/p/rclpy/rclpy.node.html#rclpy.node.Node.create_subscription
+        qos_profile = QoSProfile(depth=1, durability=QoSDurabilityPolicy.TRANSIENT_LOCAL) if latching else 10
+        sub = self.create_subscription(
+            msg_type=msg_type,
+            topic=topic,
+            callback=callback,
+            qos_profile=qos_profile,
+            callback_group=ReentrantCallbackGroup(),  # allow concurrent callbacks
+        )
+        self.subscribers.append(sub)
+
+    def cam_info_callback(self, info: CameraInfo) -> None:
+        """
+        Logs CameraInfo as a Rerun Pinhole.
+        """
+        time = Time.from_msg(info.header.stamp)
+        self.pinhole_model.from_camera_info(info)
+        rr.set_time("ros_time", timestamp=np.datetime64(time.nanoseconds, "ns"))
+        rr.log(
+            "rgbd_camera/camera_info",
+            rr.Pinhole(
+                resolution=[info.width, info.height],
+                image_from_camera=self.pinhole_model.intrinsic_matrix(),
+                image_plane_distance=1.0,
+                parent_frame=info.header.frame_id,
+                # Specifying a `child_frame` for the 2D image plane allows Rerun to
+                # visualize the pinhole frustum together with the image in 3D views.
+                # This has to match the coordinate frames used when logging images,
+                # see `image_callback` below.
+                child_frame=info.header.frame_id + "_image_plane",
+            ),
         )
 
-        # --- Subscriptions ---
+    def odom_callback(self, odom: Odometry) -> None:
+        """
+        Logs data from Odometry as Rerun Scalars.
+        """
+        time = Time.from_msg(odom.header.stamp)
+        rr.set_time("ros_time", timestamp=np.datetime64(time.nanoseconds, "ns"))
+        # Capture time-series data for the linear and angular velocities
+        rr.log("odom/twist/linear/x", rr.Scalars(odom.twist.twist.linear.x))
+        rr.log("odom/twist/angular/z", rr.Scalars(odom.twist.twist.angular.z))
 
-        # 1. URDF
-        self.create_subscription(
-            String, "/robot_description", self.urdf_cb, transient_local_qos
+    def image_callback(self, img: Image) -> None:
+        """
+        Logs an RGB image as a Rerun Image.
+        """
+        time = Time.from_msg(img.header.stamp)
+        rr.set_time("ros_time", timestamp=np.datetime64(time.nanoseconds, "ns"))
+        rr.log("rgbd_camera/image", rr.Image(self.cv_bridge.imgmsg_to_cv2(img)))
+        # Make sure the image plane frame matches what we set in `cam_info_callback`.
+        rr.log("rgbd_camera/image", rr.CoordinateFrame(frame=img.header.frame_id + "_image_plane"))
+
+    def depth_callback(self, img: Image) -> None:
+        """
+        Logs a depth image as a Rerun DepthImage.
+        """
+        time = Time.from_msg(img.header.stamp)
+        depth_arr = self.cv_bridge.imgmsg_to_cv2(img, desired_encoding="32FC1")
+
+        # MuJoCo assigns far-clip sentinel values (~1000m) to background/no-hit
+        # pixels. Clip those out so they don't blow out the point cloud's scale.
+        max_range = 20.0  # meters — generous margin above any real simulated geometry
+        depth_arr = np.where(depth_arr > max_range, np.nan, depth_arr)
+
+        depth_image = rr.DepthImage(
+            depth_arr,
+            meter=1.0,
+            colormap="viridis",
+        )
+        rr.set_time("ros_time", timestamp=np.datetime64(time.nanoseconds, "ns"))
+        rr.log("rgbd_camera/depth_image", depth_image)
+        rr.log("rgbd_camera/depth_image", rr.CoordinateFrame(frame=img.header.frame_id + "_image_plane"))
+    
+    def occupancy_grid_callback(
+        self,
+        entity_path: str,
+        grid: OccupancyGrid,
+        colormap: rr.components.Colormap,
+        draw_order: float | None = None,
+        opacity: float | None = None,
+    ) -> None:
+        """
+        Logs a ROS OccupancyGrid as a Rerun GridMap.
+        """
+        time = Time.from_msg(grid.header.stamp)
+        rr.set_time("ros_time", timestamp=np.datetime64(time.nanoseconds, "ns"))
+
+        # Log the coordinate frame ID of the map.
+        # The local offset of the map frame within the grid is handled by the archetype (see below).
+        rr.log(entity_path, rr.CoordinateFrame(frame=grid.header.frame_id))
+
+        # ROS maps start at the bottom-left cell; Rerun image buffers are top-row first.
+        data = np.asarray(grid.data, dtype=np.int8).reshape((grid.info.height, grid.info.width))
+        image_data = np.flipud(data).astype(np.uint8, copy=False)
+
+        rr.log(
+            entity_path,
+            rr.GridMap(
+                data=image_data.tobytes(),
+                format=rr.components.ImageFormat(
+                    width=grid.info.width,
+                    height=grid.info.height,
+                    color_model="L",
+                    channel_datatype="U8",
+                ),
+                cell_size=grid.info.resolution,
+                translation=[
+                    grid.info.origin.position.x,
+                    grid.info.origin.position.y,
+                    grid.info.origin.position.z,
+                ],
+                quaternion=rr.Quaternion(
+                    xyzw=[
+                        grid.info.origin.orientation.x,
+                        grid.info.origin.orientation.y,
+                        grid.info.origin.orientation.z,
+                        grid.info.origin.orientation.w,
+                    ]
+                ),
+                colormap=colormap,
+                draw_order=draw_order,
+                opacity=opacity,
+            ),
         )
 
-        # 2. TF & TF Static (Published by robot_state_publisher)
-        self.create_subscription(
-            TFMessage, "/tf_static", self.tf_cb, transient_local_qos
-        )
-        self.create_subscription(TFMessage, "/tf", self.tf_cb, 100)
+    def scan_callback(self, scan: LaserScan) -> None:
+        """
+        Logs a LaserScan after transforming it to line-segments.
 
-        # 3. Odometry (Assuming your ros2_control diff_drive/controller outputs here)
-        self.create_subscription(Odometry, "/tibble_controller/odom", self.odom_cb, 10)
+        Note: we do a client-side transformation of the LaserScan data into Rerun
+        points / lines until Rerun has native support for LaserScan style projections:
+        [#1534](https://github.com/rerun-io/rerun/issues/1534)
+        """
+        time = Time.from_msg(scan.header.stamp)
+        rr.set_time("ros_time", timestamp=np.datetime64(time.nanoseconds, "ns"))
 
-        # 4. Joint States (Published by joint_state_broadcaster or joint_state_publisher_gui)
-        self.create_subscription(JointState, "/joint_states", self.joint_state_cb, 10)
+        # Project the laser scan to a collection of points
+        points = self.laser_proj.projectLaser(scan)
+        pts = point_cloud2.read_points(points, field_names=["x", "y", "z"], skip_nans=True)
+        pts = structured_to_unstructured(pts)
 
-    def urdf_cb(self, msg: String):
-        self.get_logger().info("Received robot_description, logging URDF to Rerun")
+        # Turn every pt into a line-segment from the origin to the point.
+        origin = (pts / np.linalg.norm(pts, axis=1).reshape(-1, 1)) * 0.3
+        segs = np.hstack([origin, pts]).reshape(pts.shape[0] * 2, 3)
+
+        rr.log("scan", rr.LineStrips3D(segs, radii=0.0025, colors=[255, 165, 0]))
+        rr.log("scan", rr.CoordinateFrame(frame=scan.header.frame_id))
+
+    def urdf_callback(self, urdf_msg: String) -> None:
+        """
+        Forwards the robot description message to Rerun's built-in URDF loader.
+
+        Documentation about URDF support in Rerun can be found here:
+        https://rerun.io/docs/howto/logging-and-ingestion/urdf
+        """
+        # NOTE: file_path is not known here, robot.urdf is just a placeholder to let
+        # Rerun know the file type. Since we run this example in a ROS environment,
+        # Rerun can use AMENT_PREFIX_PATH etc to resolve asset paths of the URDF.
         rr.log_file_from_contents(
             file_path="robot.urdf",
-            file_contents=msg.data.encode("utf-8"),
+            file_contents=urdf_msg.data.encode("utf-8"),
             entity_path_prefix="urdf",
             static=True,
         )
 
-    def resolve_tf_path(self, frame_id):
-        """Builds the full Rerun entity path by walking up the TF tree."""
-        path = [frame_id]
-        current = frame_id
-        while current in self.frame_parents:
-            current = self.frame_parents[current]
-            path.insert(0, current)
-        return "urdf/" + "/".join(path)
+    def tf_callback(self, tf_msg: TFMessage) -> None:
+        """
+        Logs TF transforms to Rerun as Transform3D messages,
+        with `parent_frame` and `child_frame` fields set.
 
-    def tf_cb(self, msg: TFMessage):
-        for tf in msg.transforms:
-            # Clean up frame IDs (ROS2 sometimes includes leading slashes)
-            parent = tf.header.frame_id.lstrip("/")
-            child = tf.child_frame_id.lstrip("/")
-
-            # Update our internal tree
-            self.frame_parents[child] = parent
-
-            # Log the transform to the specific branch of the URDF tree
-            entity_path = self.resolve_tf_path(child)
-
+        Documentation about transforms in Rerun can be found here:
+        https://rerun.io/docs/concepts/transforms
+        """
+        for transform in tf_msg.transforms:
+            time = Time.from_msg(transform.header.stamp)
+            rr.set_time("ros_time", timestamp=np.datetime64(time.nanoseconds, "ns"))
             rr.log(
-                entity_path,
+                "transforms",
                 rr.Transform3D(
                     translation=[
-                        tf.transform.translation.x,
-                        tf.transform.translation.y,
-                        tf.transform.translation.z,
+                        transform.transform.translation.x,
+                        transform.transform.translation.y,
+                        transform.transform.translation.z,
                     ],
                     rotation=rr.Quaternion(
                         xyzw=[
-                            tf.transform.rotation.x,
-                            tf.transform.rotation.y,
-                            tf.transform.rotation.z,
-                            tf.transform.rotation.w,
+                            transform.transform.rotation.x,
+                            transform.transform.rotation.y,
+                            transform.transform.rotation.z,
+                            transform.transform.rotation.w,
                         ]
                     ),
+                    parent_frame=transform.header.frame_id,
+                    child_frame=transform.child_frame_id,
                 ),
             )
 
-    def odom_cb(self, msg: Odometry):
-        """Logs the robot's odometry as a 3D point and orientation in the world."""
-        pos = msg.pose.pose.position
-        rot = msg.pose.pose.orientation
 
-        # Log to a separate 'odometry' space outside the URDF tree
-        rr.log(
-            "odometry/base_link",
-            rr.Transform3D(
-                translation=[pos.x, pos.y, pos.z],
-                rotation=rr.Quaternion(xyzw=[rot.x, rot.y, rot.z, rot.w]),
-            ),
-        )
+def main() -> None:
+    rr.init("rerun_ros_bridge")
 
-    def joint_state_cb(self, msg: JointState):
-        """Logs joint angles as timeseries scalars for debugging control outputs."""
-        for name, position in zip(msg.name, msg.position):
-            rr.log(f"telemetry/joints/{name}", rr.Scalars(position))
+    grpc_port = 9876
+    web_port = 9090
 
+    server_uri = rr.serve_grpc(grpc_port=grpc_port)
+    rr.serve_web_viewer(connect_to=server_uri, web_port=web_port, open_browser=False)
 
-def main():
+    # Prints out the URL to open in a browser to view the Rerun visualizer.
+    # This is kinda hard to find in the logs, might make it output to a file or something in the future.
+    from urllib.parse import quote
+    proxy_url = f"rerun+http://localhost:{grpc_port}/proxy"
+    web_url = f"http://localhost:{web_port}/?url={quote(proxy_url, safe='')}"
+    print(f"\n{'='*60}\nRERUN VIEWER URL: {web_url}\n{'='*60}\n")
+
+    # reads --ros-args from sys.argv
     rclpy.init()
-    node = RerunUrdfBridge()
-    try:
-        rclpy.spin(node)
-    except KeyboardInterrupt:
-        pass
-    finally:
-        node.destroy_node()
-        rclpy.shutdown()
+
+    robot_subscriber = RobotSubscriber()
+    rclpy.spin(robot_subscriber, executor=rclpy.executors.MultiThreadedExecutor())
+
+    robot_subscriber.destroy_node()
+    rclpy.shutdown()
 
 
 if __name__ == "__main__":
