@@ -68,26 +68,59 @@
         </ros2_control>
     </xacro:unless>
 
-
-
     <!-- Load the ROS2 Control information for just sim purposes -->
     <xacro:if value="$(arg use_sim)">
-        <ros2_control name="name" type="system">
-
+        <ros2_control name="MujocoSystem" type="system">
             <hardware>
-                <plugin>gz_ros2_control/GazeboSimSystem</plugin>
+                <plugin>mujoco_ros2_control/MujocoSystemInterface</plugin>
             </hardware>
 
-            <!-- Define all joints and their command/state interfaces necessary for sim -->
+             <!-- Define all the joints that will have a command or state interface -->
+            <joint name="DL_Rotate">
+                <command_interface name="velocity">
+                    <param name="min">-10</param>
+                    <param name="max">10</param>
+                </command_interface>
+                <command_interface name="position"/>
+                <state_interface name="position"/>
+                <state_interface name="velocity"/>
+            </joint>
 
+            <joint name="DR_Rotate">
+                <command_interface name="velocity">
+                    <param name="min">-10</param>
+                    <param name="max">10</param>
+                </command_interface>
+                <command_interface name="position"/>
+                <state_interface name="position"/>
+                <state_interface name="velocity"/>
+            </joint>
+
+            <joint name="LA_Extend">
+                <command_interface name="velocity"/>
+                <command_interface name="position"/>
+                <command_interface name="la_reset"/>
+                <state_interface name="position"/>
+                <state_interface name="velocity"/>
+            </joint>
+
+            <joint name="Excavation_Rotate">
+                <command_interface name="velocity">
+                    <param name="min">-10</param>
+                    <param name="max">10</param>
+                </command_interface>
+                <command_interface name="position"/>
+                <state_interface name="position"/>
+                <state_interface name="velocity"/>
+            </joint>
+
+            <!-- <gpio name="vibe_control">
+                <command_interface name="vibe_enabled"/>
+            </gpio>
+
+            <gpio name="latch_control">
+                <command_interface name="hop_latched"/>
+            </gpio> -->
         </ros2_control>
-
-        <gazebo>
-            <plugin name="gz_ros2_control::GazeboSimROS2ControlPlugin" filename="libgz_ros2_control-system.so">
-                <parameters>$(find control)/config/tibble_controller.yaml</parameters>
-            </plugin>
-        </gazebo>
     </xacro:if>
-
 </robot>
-

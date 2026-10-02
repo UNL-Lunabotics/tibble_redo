@@ -6,12 +6,8 @@
     <xacro:arg name="use_control" default="false"/>
     <xacro:arg name="use_mock_hardware" default="false" />
 
-
-
     <!-- Define base_link -->
     <link name="base_link"/>
-
-
 
     <!-- Include needed files (utilizing conditions) (these are relative filepaths) -->
     <xacro:include filename="tibble_core.xacro"/>
@@ -22,7 +18,7 @@
     </xacro:if>
 
     <xacro:if value="$(arg use_sim)">
-        <xacro:include filename="gazebo.xacro"/>
+        <xacro:include filename="mujoco_inputs.xacro"/>
     </xacro:if>
 
 </robot>
