@@ -27,10 +27,10 @@ end_path = sys.argv[2]
 Path(end_path).mkdir(parents=True, exist_ok=True)
 
 for filename in os.listdir(start_path):
-    if filename.endswith(".stl"):
+    if filename.endswith(".STL"):
         # Get files
         stl_path = os.path.join(start_path, filename)
-        obj_path = os.path.join(end_path, filename.replace(".stl", ".obj"))
+        obj_path = os.path.join(end_path, filename.replace(".STL", ".obj"))
         
         # Convert stl to obj
         ms = pymeshlab.MeshSet()
