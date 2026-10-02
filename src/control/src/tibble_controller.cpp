@@ -77,9 +77,9 @@ namespace tibble_controller
 
     controller_interface::CallbackReturn TibbleController::on_configure(const rclcpp_lifecycle::State &)
     {
-        cmd_vel_sub_ = get_node()->create_subscription<geometry_msgs::msg::Twist>(
+        cmd_vel_sub_ = get_node()->create_subscription<geometry_msgs::msg::TwistStamped>(
             "/cmd_vel", rclcpp::SystemDefaultsQoS(),
-            [this](const geometry_msgs::msg::Twist::SharedPtr msg)
+            [this](const geometry_msgs::msg::TwistStamped::SharedPtr msg)
             {
                 twist_cmd_buffer_.writeFromNonRT(*msg);
             });

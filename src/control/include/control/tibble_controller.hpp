@@ -17,7 +17,7 @@
 #include "realtime_tools/realtime_buffer.hpp"
 #include "rclcpp/qos.hpp"
 #include "rclcpp_lifecycle/node_interfaces/lifecycle_node_interface.hpp"
-#include "geometry_msgs/msg/twist.hpp"
+#include "geometry_msgs/msg/twist_stamped.hpp"
 
 namespace tibble_controller
 {
@@ -82,9 +82,9 @@ namespace tibble_controller
         double excav_dt_speed_multiplier_;
         long int telemetry_update_rate_;         // milliseconds
 
-        rclcpp::Subscription<geometry_msgs::msg::Twist>::SharedPtr cmd_vel_sub_;
+        rclcpp::Subscription<geometry_msgs::msg::TwistStamped>::SharedPtr cmd_vel_sub_;
 
-        realtime_tools::RealtimeBuffer<geometry_msgs::msg::Twist> twist_cmd_buffer_;
+        realtime_tools::RealtimeBuffer<geometry_msgs::msg::TwistStamped> twist_cmd_buffer_;
     };
 } // namespace tibble_controller
 
