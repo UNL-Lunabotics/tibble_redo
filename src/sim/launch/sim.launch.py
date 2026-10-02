@@ -45,7 +45,6 @@ def generate_launch_description():
         parameters=[
             {"use_sim_time": True},
             ParameterFile(PathJoinSubstitution([FindPackageShare("control"), "config", "gamepad.yaml"])),
-            ParameterFile(PathJoinSubstitution([FindPackageShare("sim"), "config", "mujoco_plugins.yaml"])),
         ],
     )
 

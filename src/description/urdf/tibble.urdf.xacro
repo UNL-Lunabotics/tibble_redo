@@ -11,7 +11,7 @@
 
     <!-- Include needed files (utilizing conditions) (these are relative filepaths) -->
     <xacro:include filename="tibble_core.xacro"/>
-    <xacro:include filename="sensors.xacro"/>
+    <!-- <xacro:include filename="sensors.xacro"/> -->
 
     <xacro:if value="$(arg use_control)">
         <xacro:include filename="ros2_control.xacro"/>

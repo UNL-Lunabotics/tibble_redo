@@ -15,17 +15,17 @@
         </default>
       </default>
 
-      <actuator>
-        <velocity name="DL_Rotate" joint="DL_Rotate" kv="20"/>
-        <velocity name="RL_Rotate" joint="RL_Rotate" kv="20"/>
+      <!-- <actuator>
+        <velocity name="DL_Rotate" joint="DL_Rotate"/>
+        <velocity name="DR_Rotate" joint="DR_Rotate"/>
       </actuator>
       <actuator>
-        <velocity name="LA_Extend" joint="LA_Extend" kv="20"/>
+        <velocity name="LA_Extend" joint="LA_Extend"/>
       </actuator>
       <actuator>
         <velocity name="Excavation_Rotate" joint="Excavation_Rotate"/>
-      </actuator>
-      <extension>
+      </actuator> -->
+      <!-- <extension>
         <plugin plugin="mujoco.plugin.lidar">
           <instance name="lidar">
             <config key="resolution" value="360 1"/>
@@ -35,11 +35,11 @@
             <config key="min_range" value="0.1"/>
           </instance>
         </plugin>
-      </extension>
+      </extension> -->
 
-      <sensor>
+      <!-- <sensor>
         <plugin name="lidar" instance="lidar" objtype="site" objname="lidar_link_optical"/>
-      </sensor>
+      </sensor> -->
     </raw_inputs>
 
     <!-- Specific inputs that require processing from the conversion script-->
@@ -49,7 +49,7 @@
 
       <!-- The camera with the specified values will be added at the specified site name. -->
       <!-- The position and quaterinion will be filled in by the converter -->
-      <camera site="camera_link_optical" name="camera" fovy="58" mode="fixed" resolution="640 480"/>
+      <!-- <camera site="camera_link_optical" name="camera" fovy="58" mode="fixed" resolution="640 480"/> -->
 
       <!-- The element with the type and name as listed below will be modified with the remaining attributes -->
       <!-- If the attribute already existed, it will be overwritten -->
