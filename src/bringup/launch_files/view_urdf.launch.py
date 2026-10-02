@@ -8,10 +8,26 @@ from launch_ros.parameter_descriptions import ParameterValue
 
 
 def generate_launch_description():
-    base = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource(
-            PathJoinSubstitution([FindPackageShare("bringup"), "launch_files", "base.launch.py"])
-        )
+    bringup_pkg = FindPackageShare("bringup")
+    
+    # Robot State Publisher
+    robot_description_content = Command([
+        "xacro",
+        " ",
+        PathSubstitution(FindPackageShare("description")),
+        "/urdf/tibble.urdf.xacro",
+        " use_sim:=true",
+        " use_control:=true",
+        " use_mock_hardware:=false",
+    ])
+
+    rsp = Node(
+        package="robot_state_publisher",
+        executable="robot_state_publisher",
+        output="both",
+        parameters=[
+            {"robot_description": robot_description_content, "use_sim_time": True}
+        ]
     )
 
     # For joint manipulation
@@ -29,7 +45,7 @@ def generate_launch_description():
     )
 
     return LaunchDescription([
-        base,
+        rsp,
         joint_state_publisher_gui_node,
-        rviz_node,
+        rviz_node
     ])

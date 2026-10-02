@@ -48,18 +48,12 @@ def generate_launch_description():
         executable="robot_state_publisher",
         output="both",
         parameters=[
-            {"robot_description": robot_description_content, "use_sim_time": True}
+            {"robot_description": robot_description_content, "use_sim_time": LaunchConfiguration('use_sim')}
         ],
     )
     controllers_config = PathJoinSubstitution([FindPackageShare("control"), "config", "gamepad.yaml"])
     joy_params = PathSubstitution(control_pkg) / "config" / "joystick.yaml"
     twist_mux_params = PathSubstitution(control_pkg) / "config" / "twist_mux.yaml"
-
-    foxglove_bridge = Node(
-        package="foxglove_bridge",
-        executable="foxglove_bridge",
-        name="foxglove_bridge",
-    )
     
     diff_drive_spawner = Node(
         package="controller_manager",
@@ -108,7 +102,6 @@ def generate_launch_description():
         use_control,
         use_mock_hardware,
         rsp,
-        foxglove_bridge,
         diff_drive_spawner,
         joint_broad_spawner,
         joy_node,
