@@ -15,16 +15,19 @@
         </default>
       </default>
 
-      <!-- <actuator>
-        <velocity name="DL_Rotate" joint="DL_Rotate"/>
-        <velocity name="DR_Rotate" joint="DR_Rotate"/>
-      </actuator>
       <actuator>
-        <velocity name="LA_Extend" joint="LA_Extend"/>
+        <position name="DL_Rotate_pos" joint="DL_Rotate" kp="20.0"/>
+        <velocity name="DL_Rotate_vel" joint="DL_Rotate" kv="0.0"/>
+
+        <position name="DR_Rotate_pos" joint="DR_Rotate" kp="20.0"/>
+        <velocity name="DR_Rotate_vel" joint="DR_Rotate" kv="0.0"/>
+
+        <position name="LA_Extend_pos" joint="LA_Extend" kp="20.0"/>
+        <velocity name="LA_Extend_vel" joint="LA_Extend" kv="0.0"/>
+
+        <position name="Excavation_Rotate_pos" joint="Excavation_Rotate" kp="20.0"/>
+        <velocity name="Excavation_Rotate_vel" joint="Excavation_Rotate" kv="0.0"/>
       </actuator>
-      <actuator>
-        <velocity name="Excavation_Rotate" joint="Excavation_Rotate"/>
-      </actuator> -->
       <!-- <extension>
         <plugin plugin="mujoco.plugin.lidar">
           <instance name="lidar">
