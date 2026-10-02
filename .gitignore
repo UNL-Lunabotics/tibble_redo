@@ -6,3 +6,6 @@ log
 .env
 compose.override.yaml
 .DS_STORE
+__pycache__
+scripts/onshape-to-urdf/urdf_export_contents/*
+!scripts/onshape-to-urdf/urdf_export_contents/temp
