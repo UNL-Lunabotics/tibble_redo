@@ -10,17 +10,21 @@ controller_manager:
 
 tibble_controller:
   ros__parameters:
-    command_topic: "~/cmd_vel"
+    command_topic: "/tibble_command"
     odometry_topic: "~/odom"
     transform_topic: "/tf"
 
-    wheel_radius: 0.929             # meters
+    wheel_radius: 0.05              # meters
     wheel_separation: 0.5659        # meters
 
     paddle_speed: 12.25             # radians/second
     linear_actuator_speed: 0.01     # meters/second (in extension)
+    la_min: 0.0
+    la_max: 0.254
     excav_dt_speed_multiplier: 0.5  # multiply drivetrain speed by when excavating
+    digging_threshold: 0.05
 
+    cmd_timeout: 0.5
     telemetry_update_rate: 3000     # milliseconds between printing
 
     # This populates as a list named "joints" when using auto_declare
