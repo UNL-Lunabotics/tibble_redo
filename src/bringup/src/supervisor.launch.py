@@ -6,7 +6,7 @@ from launch.substitutions import PathJoinSubstitution
 
 def generate_launch_description():
     config = PathJoinSubstitution(
-        [FindPackageShare('tibble_supervisor'), 'config', 'supervisor.yaml'])
+        [FindPackageShare('supervisor'), 'config', 'supervisor.yaml'])
 
     return LaunchDescription([
         Node(
