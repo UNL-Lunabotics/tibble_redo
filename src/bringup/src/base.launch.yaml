@@ -1,12 +1,9 @@
 %YAML 1.2
 ---
 launch:
-  - let:
+  - arg:
       name: "robot_name"
-      value: "tibble"
-  - let:
-      name: "urdf_path"
-      value: "$(find-pkg-share description)/urdf/$(var robot_name).urdf.xacro"
+      default: "tibble"
   - arg:
       name: "use_sim"
       default: "false"
@@ -16,11 +13,16 @@ launch:
   - arg:
       name: "use_mock_hardware"
       default: "false"
+
+  - let:
+      name: "urdf_path"
+      value: "$(find-pkg-share description)/urdf/$(var robot_name).urdf.xacro"
+
   - node:
       pkg: "robot_state_publisher"
       exec: "robot_state_publisher"
       name: "rsp"
-      namespace: "tibble"
+      namespace: "$(var robot_name)"
       param:
         - name: "robot_description"
           value: "$(command 'xacro $(var urdf_path) use_sim:=$(var use_sim) use_control:=$(var use_control) use_mock_hardware:=$(var use_mock_hardware)')"

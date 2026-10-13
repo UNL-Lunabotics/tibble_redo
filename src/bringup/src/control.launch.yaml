@@ -1,0 +1,33 @@
+%YAML 1.2
+---
+launch:
+  - arg:
+      name: "robot_name"
+      default: "robot"
+  - arg:
+      name: "use_sim"
+      default: "false"
+
+  - node:
+      pkg: "controller_manager"
+      exec: "spawner"
+      name: "joint_state_broadcaster"
+      namespace: "tibble"
+      args: "joint_broad"
+
+  # This is the custom tibble controller
+  - node:
+      pkg: "controller_manager"
+      exec: "spawner"
+      name: "$(var robot_name)_controller_manager"
+      namespace: "$(var robot_name)"
+      args: "$(var robot_name)_controller --controller_manager /controller_manager"
+      if: "$(var use_custom_controller)"
+
+  # This is a basic differential drive controller, good for testing
+  - node:
+      pkg: "controller_manager"
+      exec: "spawner"
+      name: "diff_controller_manager"
+      args: "diff_cont" #TODO: give it controller args with --param-file
+      unless: "$(var use_sim)"

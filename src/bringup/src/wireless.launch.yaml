@@ -1,0 +1,8 @@
+%YAML 1.2
+---
+launch:
+  - arg:
+      name: "robot_name"
+      default: "robot"
+
+# Empty for now, will be important later

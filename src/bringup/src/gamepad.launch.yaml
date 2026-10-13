@@ -1,0 +1,26 @@
+%YAML 1.2
+---
+launch:
+  - arg:
+      name: "robot_name"
+      default: "robot"
+
+  - let:
+      name: "joy_params"
+      value: "$(find-pkg-share control)/config/joystick.yaml"
+  - let:
+      name: "twist_mux_params"
+      value: "$(find-pkg-share control)/config/twist_mux.yaml"
+
+  - node:
+      pkg: "joy"
+      exec: "joy_node"
+      name: "joy"
+      namespace: "$(var robot_name)"
+      param:
+        - from: "$(var joy_params)"
+  - node:
+      pkg: "twist_mux"
+      exec: "twist_mux"
+      param:
+        - from: "$(var twist_mux_params)"

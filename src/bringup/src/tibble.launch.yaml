@@ -1,0 +1,78 @@
+%YAML 1.2
+---
+launch:
+  # Defaults are set to what you would use during a competition run
+  - arg:
+      # Accepted values:
+      # "real_teleop", "real_dual", "real_test"
+      # "sim_teleop", "sim_dual", "sim_test"
+      # Where _teleop means autonomy disabled and _dual means autonomy hotswapping enabled.
+      # Where real_test means using a mock hardware interface and sim_test means no controllers launched.
+      name: "robot_mode"
+      default: "real_dual"
+      choice:
+        - value: "real_teleop"
+        - value: "real_dual"
+        - value: "real_test"
+        - value: "sim_teleop"
+        - value: "sim_dual"
+        - value: "sim_test"
+  - arg:
+      name: "use_wireless"
+      default: "true"
+
+  # Infer finer parameters based on mode chosen
+  - let:
+      # Evaluates to true if the word sim is in the robot_mode
+      name: "use_sim"
+      value: $(eval "'sim' in '$(var robot_mode)'")
+  - let:
+      # Evaluates to true if robot_mode is not sim_test (the only mode we don't use control)
+      name: "use_control"
+      value: "$(not-equals $(var robot_mode) 'sim_test')"
+  - let:
+      # Evaluates to true if use_sim is true OR robot_mode is real_test
+      name: "use_mock_hardware"
+      value: "$(or $(var use_sim) $(equals $(var robot_mode) 'real_test'))"
+  - let:
+      name: "robot_name"
+      value: "tibble"
+
+  # Launch/configure/include common (everything uses it) things
+  - include:
+      file: "$(find-pkg-share bringup)/src/base.launch.yaml"
+      let:
+        - name: "robot_name"
+          value: "tibble"
+        - name: "use_sim"
+          value: "$(var use_sim)"
+        - name: "use_control"
+          value: "true"
+        - name: "use_mock_hardware"
+          value: "$(var use_mock_hardware)"
+
+  # Controls launch
+  - include:
+      file: "$(find-pkg-share bringup)/src/control.launch.yaml"
+      let:
+        - name: "robot_name"
+          value: "tibble"
+        # Launches custom controller if not in sim
+        # TODO: This may need to be changed someday, but for now its good
+        - name: "use_custom_controller"
+          value: "$(var use_sim)"
+  
+  # TODO: Supervisor launch
+
+
+  # Wireless launch
+  - include:
+      file: "$(find-pkg-share bringup)/src/wireless.launch.yaml"
+      let:
+        - name: "robot_name"
+          value: "tibble"
+      if: "$(var use_wireless)"
+
+
+  # Sim launch
+  # GUI launch (rerun)

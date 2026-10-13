@@ -1,0 +1,20 @@
+%YAML 1.2
+---
+launch:
+  - arg:
+      name: "robot_name"
+      default: "tibble"
+  - arg:
+      name: "world_name"
+      default: "world"
+  # No world arg for now? Not sure how that'll work out
+
+  - let:
+      name: "scene"
+      value: "$(find-pkg-share sim)/worlds/$(var world_name).mjcf"
+  
+  # This node converts the urdf topic to Mujoco
+  - node:
+      pkg: "mujoco_ros2_control"
+      exec: "robot_description_to_mjcf.sh"
+      args: "--add_free_joint --scene $(var scene) --publish_topic /mujoco_robot_description"
