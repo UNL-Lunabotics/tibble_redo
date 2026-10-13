@@ -13,7 +13,7 @@ launch:
       name: "scene"
       value: "$(find-pkg-share sim)/worlds/$(var world_name).mjcf"
   
-  # This node converts the urdf topic to Mujoco
+  # This node converts the urdf topic to mjcf format AND launches the gui
   - node:
       pkg: "mujoco_ros2_control"
       exec: "robot_description_to_mjcf.sh"

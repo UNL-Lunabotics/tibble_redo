@@ -59,7 +59,7 @@ launch:
           value: "tibble"
         # Launches custom controller if not in sim
         # TODO: This may need to be changed someday, but for now its good
-        - name: "use_custom_controller"
+        - name: "use_sim"
           value: "$(var use_sim)"
   
   # TODO: Supervisor launch
@@ -75,4 +75,12 @@ launch:
 
 
   # Sim launch
+  - include:
+      file: "$(find-pkg-share bringup)/src/sim.launch.yaml"
+      let:
+        - name: "robot_name"
+          value: "tibble"
+      if: "$(var use_sim)"
+
+
   # GUI launch (rerun)
