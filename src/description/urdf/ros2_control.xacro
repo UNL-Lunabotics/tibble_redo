@@ -79,7 +79,7 @@
             </hardware>
 
             <!-- Define all the joints that will have a command or state interface -->
-            <joint name="DL_Rotate">
+            <joint name="FL_Wheel_Rotate">
                 <command_interface name="velocity">
                     <param name="min">-10</param>
                     <param name="max">10</param>
@@ -89,7 +89,7 @@
                 <state_interface name="velocity"/>
             </joint>
 
-            <joint name="DR_Rotate">
+            <joint name="FR_Wheel_Rotate">
                 <command_interface name="velocity">
                     <param name="min">-10</param>
                     <param name="max">10</param>

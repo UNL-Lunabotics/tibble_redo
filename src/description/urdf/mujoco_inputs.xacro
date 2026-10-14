@@ -16,21 +16,19 @@
       </default>
 
       <actuator>
-        <velocity name="DL_Rotate" joint="DL_Rotate" />
-        <velocity name="DR_Rotate" joint="DR_Rotate" />
+        <velocity name="FL_Wheel_Rotate" joint="FL_Wheel_Rotate" />
+        <velocity name="FR_Wheel_Rotate" joint="FR_Wheel_Rotate" />
         <velocity name="LA_Extend" joint="LA_Extend" />
         <velocity name="Excavation_Rotate" joint="Excavation_Rotate" />
       </actuator>
       <equality>
-        <joint joint1="FL_Wheel_Rotate" joint2="DL_Rotate"/>
-        <joint joint1="ML_Wheel_Rotate" joint2="DL_Rotate"/>
-        <joint joint1="BL_Wheel_Rotate" joint2="DL_Rotate"/>
-        <joint joint1="TL_Wheel_Rotate" joint2="DL_Rotate"/>
+        <joint joint1="ML_Wheel_Rotate" joint2="FL_Wheel_Rotate"/>
+        <joint joint1="BL_Wheel_Rotate" joint2="FL_Wheel_Rotate"/>
+        <joint joint1="TL_Wheel_Rotate" joint2="FL_Wheel_Rotate"/>
 
-        <joint joint1="FR_Wheel_Rotate" joint2="DR_Rotate"/>
-        <joint joint1="MR_Wheel_Rotate" joint2="DR_Rotate"/>
-        <joint joint1="BR_Wheel_Rotate" joint2="DR_Rotate"/>
-        <joint joint1="TR_Wheel_Rotate" joint2="DR_Rotate"/>
+        <joint joint1="MR_Wheel_Rotate" joint2="FR_Wheel_Rotate"/>
+        <joint joint1="BR_Wheel_Rotate" joint2="FR_Wheel_Rotate"/>
+        <joint joint1="TR_Wheel_Rotate" joint2="FR_Wheel_Rotate"/>
       </equality>
       <!-- <extension>
         <plugin plugin="mujoco.plugin.lidar">
