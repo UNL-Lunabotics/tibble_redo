@@ -21,6 +21,7 @@ launch:
       name: "use_wireless"
       default: "true"
 
+
   # Infer finer parameters based on mode chosen
   - let:
       # Evaluates to true if the word sim is in the robot_mode
@@ -38,12 +39,13 @@ launch:
       name: "robot_name"
       value: "tibble"
 
+
   # Launch/configure/include common (everything uses it) things
   - include:
       file: "$(find-pkg-share bringup)/src/base.launch.yaml"
       let:
         - name: "robot_name"
-          value: "tibble"
+          value: "$(var robot_name)"
         - name: "use_sim"
           value: "$(var use_sim)"
         - name: "use_control"
@@ -51,27 +53,28 @@ launch:
         - name: "use_mock_hardware"
           value: "$(var use_mock_hardware)"
 
+
   # Controls launch
   - include:
       file: "$(find-pkg-share bringup)/src/control.launch.yaml"
       let:
         - name: "robot_name"
-          value: "tibble"
+          value: "$(var robot_name)"
         # Launches custom controller if not in sim
         # TODO: This may need to be changed someday, but for now its good
         - name: "use_sim"
           value: "$(var use_sim)"
   
+
   # TODO: Supervisor launch
 
 
-  # Wireless launch
+  # Gamepad/joy launch
   - include:
-      file: "$(find-pkg-share bringup)/src/wireless.launch.yaml"
+      file: "$(find-pkg-share bringup)/src/gamepad.launch.yaml"
       let:
         - name: "robot_name"
-          value: "tibble"
-      if: "$(var use_wireless)"
+          value: "$(var robot_name)"
 
 
   # Sim launch
@@ -79,8 +82,17 @@ launch:
       file: "$(find-pkg-share bringup)/src/sim.launch.yaml"
       let:
         - name: "robot_name"
-          value: "tibble"
+          value: "$(var robot_name)"
       if: "$(var use_sim)"
+
+
+  # Wireless launch
+  - include:
+      file: "$(find-pkg-share bringup)/src/wireless.launch.yaml"
+      let:
+        - name: "robot_name"
+          value: "$(var robot_name)"
+      if: "$(var use_wireless)"
 
 
   # GUI launch (rerun)
