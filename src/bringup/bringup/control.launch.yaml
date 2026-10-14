@@ -43,5 +43,12 @@ launch:
       pkg: "controller_manager"
       exec: "spawner"
       name: "diff_drive_controller"
-      args:  "diff_drive_controller --controller-ros-args '-r /diff_cont/cmd_vel:=/cmd_vel' --param-file $(find-pkg-share control)/config/$(var robot_name)_controller.yaml"
+      args:  "diff_drive_controller"
+      param:
+        - from: "$(find-pkg-share control)/config/$(var robot_name)_controller.yaml"
+      remap:
+        - from: "/diff_drive_controller/cmd_vel"
+          to: "/cmd_vel"
+        - from: "/diff_drive_controller/odom"
+          to: "/odom"
       if: "$(var use_sim)"
