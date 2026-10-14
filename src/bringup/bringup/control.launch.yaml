@@ -12,7 +12,7 @@ launch:
   - node:
       pkg: "supervisor"
       exec: "$(var robot_name)_supervisor"
-      name: "supervisor"
+      name: "$(var robot_name)_supervisor"
       param:
         - from: "$(find-pkg-share supervisor)/config/$(var robot_name)_supervisor.yaml"
 
