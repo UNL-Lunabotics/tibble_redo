@@ -223,6 +223,11 @@ namespace tibble_controller
 
         // The supervisor already computes latch and vibe since it's just on/off
         // Additionally, no ros2_control command interface for them (maybe in future?)
+        RCLCPP_INFO_THROTTLE(
+            get_node()->get_logger(), *get_node()->get_clock(), 500,
+            "vel cmds -> DL: %.3f  DR: %.3f  LA: %.3f  drum: %.3f",
+            left_wheel_vel, right_wheel_vel, la_vel, drum_vel
+        );
 
         // TODO: odom pub, tf broadcaster, state service
 
