@@ -17,10 +17,8 @@ launch:
       pkg: "joint_state_publisher_gui"
       exec: "joint_state_publisher_gui"
       name: "joint_gui"
-      namespace: "tibble"
   - node:
       pkg: "rviz2"
       exec: "rviz2"
       name: "rviz"
-      namespace: "tibble"
       args: "$(find-pkg-share bringup)/config/view_urdf.rviz"

@@ -16,7 +16,6 @@ launch:
       pkg: "joy"
       exec: "joy_node"
       name: "joy"
-      namespace: "$(var robot_name)"
       param:
         - from: "$(var joy_params)"
   - node:
