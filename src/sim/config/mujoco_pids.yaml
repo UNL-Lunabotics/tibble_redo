@@ -1,0 +1,39 @@
+/**:
+  ros__parameters:
+    pid_gains:
+      position:
+        DL_Rotate:
+          p: 10.0
+          i: 0.0
+          d: 1.0
+          u_clamp_max: 10.0
+          u_clamp_min: -10.0
+          i_clamp_max: 0.0
+          i_clamp_min: 0.0
+
+        DR_Rotate:
+          p: 10.0
+          i: 0.0
+          d: 1.0
+          u_clamp_max: 10.0
+          u_clamp_min: -10.0
+          i_clamp_max: 0.0
+          i_clamp_min: 0.0
+
+        LA_Extend:
+          p: 10.0
+          i: 0.0
+          d: 1.0
+          u_clamp_max: 10.0
+          u_clamp_min: -10.0
+          i_clamp_max: 0.0
+          i_clamp_min: 0.0
+
+        Excavation_Rotate:
+          p: 10.0
+          i: 0.0
+          d: 1.0
+          u_clamp_max: 10.0
+          u_clamp_min: -10.0
+          i_clamp_max: 0.0
+          i_clamp_min: 0.0
