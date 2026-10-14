@@ -25,3 +25,5 @@ launch:
       param:
         - name: "robot_description"
           value: "$(command 'xacro $(var urdf_path) use_sim:=$(var use_sim) use_control:=$(var use_control) use_mock_hardware:=$(var use_mock_hardware)')"
+        - name: "use_sim_time"
+          value: "$(var use_sim)"
