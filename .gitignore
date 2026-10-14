@@ -6,3 +6,4 @@ log
 .env
 compose.override.yaml
 .DS_STORE
+__pycache__
