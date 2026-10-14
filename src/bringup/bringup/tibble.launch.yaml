@@ -72,6 +72,8 @@ launch:
       let:
         - name: "robot_name"
           value: "$(var robot_name)"
+        - name: "use_sim_time"
+          value: "$(var use_sim)"
 
 
   # Sim launch

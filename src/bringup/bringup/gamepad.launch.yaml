@@ -4,6 +4,9 @@ launch:
   - arg:
       name: "robot_name"
       default: "robot"
+  - arg:
+      name: "use_sim_time"
+      default: "false"
 
   - let:
       name: "joy_params"
@@ -26,6 +29,8 @@ launch:
       name: "teleop_twist_joy"
       param:
         - from: "$(var joy_params)"
+        - name: "use_sim_time"
+          value: "$(var use_sim_time)"
       remap:
         - from: "cmd_vel"
           to: "cmd_vel_joy" # This is what twist_mux expects since we have many cmd_vel's
@@ -35,3 +40,5 @@ launch:
       exec: "twist_mux"
       param:
         - from: "$(var twist_mux_params)"
+        - name: "use_sim_time"
+          value: "$(var use_sim_time)"
