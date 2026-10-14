@@ -24,17 +24,17 @@ launch:
 
   # Infer finer parameters based on mode chosen
   - let:
-      # Evaluates to true if the word sim is in the robot_mode
+      # Evaluates to true if the word sim is in the mode
       name: "use_sim"
-      value: $(eval "'sim' in '$(var robot_mode)'")
+      value: $(eval "'sim' in '$(var mode)'")
   - let:
-      # Evaluates to true if robot_mode is not sim_test (the only mode we don't use control)
+      # Evaluates to true if mode is not sim_test (the only mode we don't use control)
       name: "use_control"
-      value: "$(not-equals $(var robot_mode) 'sim_test')"
+      value: "$(not-equals $(var mode) 'sim_test')"
   - let:
-      # Evaluates to true if use_sim is true OR robot_mode is real_test
+      # Evaluates to true if use_sim is true OR mode is real_test
       name: "use_mock_hardware"
-      value: "$(or $(var use_sim) $(equals $(var robot_mode) 'real_test'))"
+      value: "$(or $(var use_sim) $(equals $(var mode) 'real_test'))"
   - let:
       name: "robot_name"
       value: "tibble"

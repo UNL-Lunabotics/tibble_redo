@@ -12,14 +12,23 @@ launch:
       name: "twist_mux_params"
       value: "$(find-pkg-share control)/config/twist_mux.yaml"
 
+  # This node reads from the controller
   - node:
       pkg: "joy"
       exec: "joy_node"
       name: "joy"
       param:
         - from: "$(var joy_params)"
-      # remap:
-      #   - from: ""
+  # This node subscribes to /joy and turns it into cmd_vel_joy
+  - node:
+      pkg: "teleop_twist_joy"
+      exec: "teleop_node"
+      name: "teleop_twist_joy"
+      param:
+        - from: "$(var joy_params)"
+      remap:
+        - from: "cmd_vel"
+          to: "cmd_vel_joy" # This is what twist_mux expects since we have many cmd_vel's
 
   - node:
       pkg: "twist_mux"
