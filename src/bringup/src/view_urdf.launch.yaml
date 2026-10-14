@@ -1,0 +1,24 @@
+%YAML 1.2
+---
+launch:
+  - let:
+      name: "robot_name"
+      value: "tibble"
+  - include:
+      file: "$(find-pkg-share bringup)/src/base.launch.yaml"
+      let:
+        - name: "use_sim"
+          value: "false"
+        - name: "use_control"
+          value: "false"
+        - name: "use_mock_hardware"
+          value: "true"
+  - node:
+      pkg: "joint_state_publisher_gui"
+      exec: "joint_state_publisher_gui"
+      name: "joint_gui"
+  - node:
+      pkg: "rviz2"
+      exec: "rviz2"
+      name: "rviz"
+      args: "$(find-pkg-share bringup)/config/view_urdf.rviz"

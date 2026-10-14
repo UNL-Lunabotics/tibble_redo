@@ -30,7 +30,11 @@ namespace tibble_controller
             wheel_separation_ = auto_declare<double>("wheel_separation", wheel_separation_);
             paddle_speed_ = auto_declare<double>("paddle_speed", paddle_speed_);
             la_speed_ = auto_declare<double>("linear_actuator_speed", la_speed_);
+            la_min_ = auto_declare<double>("la_min", 0.0);
+            la_max_ = auto_declare<double>("la_max", 0.254);    // TODO: unhardcode this later
             excav_dt_speed_multiplier_ = auto_declare<double>("excav_dt_speed_multiplier", excav_dt_speed_multiplier_);
+            digging_threshold_ = auto_declare<double>("digging_threshold", 0.05);
+            cmd_timeout_ = auto_declare<double>("cmd_timeout", 0.5);
             telemetry_update_rate_ = auto_declare<long int>("telemetry_update_rate", telemetry_update_rate_);
         }
         catch (const std::exception &e)
@@ -77,11 +81,14 @@ namespace tibble_controller
 
     controller_interface::CallbackReturn TibbleController::on_configure(const rclcpp_lifecycle::State &)
     {
-        cmd_vel_sub_ = get_node()->create_subscription<geometry_msgs::msg::Twist>(
-            "/cmd_vel", rclcpp::SystemDefaultsQoS(),
-            [this](const geometry_msgs::msg::Twist::SharedPtr msg)
+        cmd_buffer_.writeFromNonRT(nullptr);
+
+        cmd_sub_ = get_node()->create_subscription<interfaces::msg::TibbleCommand>(
+            cmd_topic_, rclcpp::SystemDefaultsQoS(),
+            [this](const interfaces::msg::TibbleCommand::SharedPtr msg)
             {
-                twist_cmd_buffer_.writeFromNonRT(*msg);
+                // Runs on a non-RT thread (which is why we need the buffer)
+                cmd_buffer_.writeFromNonRT(msg);
             });
 
         // TODO: odom pub, tf broadcaster, state service
@@ -116,20 +123,121 @@ namespace tibble_controller
             return controller_interface::CallbackReturn::ERROR;
         }
 
+        for (auto &interface : joint_velocity_command_interface_)
+        {
+            interface.get().set_value(0.0);
+        }
+
+        cmd_buffer_.writeFromNonRT(nullptr);
+
         RCLCPP_INFO(get_node()->get_logger(), "Activated TibbleController.");
         return CallbackReturn::SUCCESS;
     }
 
     controller_interface::return_type TibbleController::update(const rclcpp::Time &time, const rclcpp::Duration &period)
     {
-        // TODO: all of it
-        (void)time;
-        (void)period;
+        const interfaces::msg::TibbleCommand::SharedPtr command = *cmd_buffer_.readFromRT();
+
+        double linear_x = 0.0;
+        double angular_z = 0.0;
+        double drum_cmd = 0.0;
+        double la_cmd = 0.0;
+        bool panic = false;
+
+        uint8_t mode = interfaces::msg::TibbleCommand::MODE_DISABLED;
+
+        if (command)
+        {
+            const double age = (time - rclcpp::Time(command->header.stamp)).seconds();
+            if (age <= cmd_timeout_)
+            {
+                // Command is not stale if it reaches this point, so accept values from it
+                mode = command->mode;
+                panic = command->panic;
+                linear_x = command->linear_x;
+                angular_z = command->angular_z;
+                drum_cmd = command->drum_cmd;
+                la_cmd = command->la_cmd;
+            }
+            else
+            {
+                RCLCPP_WARN_THROTTLE(
+                    get_node()->get_logger(), *get_node()->get_clock(), 1000,
+                    "TibbleCommand is %.2fs old (timeout %.2fs). Commanding zero. Is the supervisor node running?",
+                    age, cmd_timeout_);
+
+            }
+        }
+        else
+        {
+            RCLCPP_WARN_THROTTLE(
+                get_node()->get_logger(), *get_node()->get_clock(), 1000,
+                "No TibbleCommand received yet. Commanding zero.");
+
+        }
+
+        // PANIC AND DISABLED
+        if (panic || mode == interfaces::msg::TibbleCommand::MODE_DISABLED)
+        {
+            linear_x = 0.0;
+            angular_z = 0.0;
+            drum_cmd = 0.0;
+            la_cmd = 0.0;
+        }
+
+        // Differential drive inverse kinematics
+        double left_wheel_vel = (linear_x - angular_z * wheel_separation_ / 2.0) / wheel_radius_;
+        double right_wheel_vel = (linear_x + angular_z * wheel_separation_ / 2.0) / wheel_radius_;
+
+        // Slowdown drivetrain while actively digging (this is what the threshold value is for)
+        const bool digging = std::abs(drum_cmd) > digging_threshold_;
+        if (digging)
+        {
+            left_wheel_vel *= excav_dt_speed_multiplier_;
+            right_wheel_vel *= excav_dt_speed_multiplier_;
+        }
+
+        // Drum
+        const double drum_vel = std::clamp(drum_cmd, -1.0, 1.0) * paddle_speed_;
+
+        // Linear actuators
+        double la_vel = std::clamp(la_cmd, -1.0, 1.0) * la_speed_;
+        const double la_position = joint_position_state_interface_[kLaExtend].get().get_value();
+        if (!std::isfinite(la_position))
+        {
+            la_vel = 0.0; // position unknown so refuse to move
+        }
+        else if (la_vel > 0.0 && la_position >= la_max_)
+        {
+            la_vel = 0.0;
+        }
+        else if (la_vel < 0.0 && la_position <= la_min_)
+        {
+            la_vel = 0.0;
+        }
+
+        joint_velocity_command_interface_[kDlRotate].get().set_value(left_wheel_vel);
+        joint_velocity_command_interface_[kDrRotate].get().set_value(right_wheel_vel);
+        joint_velocity_command_interface_[kLaExtend].get().set_value(la_vel);
+        joint_velocity_command_interface_[kExcavationRotate].get().set_value(drum_vel);
+
+        // The supervisor already computes latch and vibe since it's just on/off
+        // Additionally, no ros2_control command interface for them (maybe in future?)
+
+        // TODO: odom pub, tf broadcaster, state service
+
         return controller_interface::return_type::OK;
     }
 
     controller_interface::CallbackReturn TibbleController::on_deactivate(const rclcpp_lifecycle::State &)
     {
+        // Interfaces still active, so just set to safe defaults
+        for (auto &interface : joint_velocity_command_interface_)
+        {
+            interface.get().set_value(0.0);
+        }
+        cmd_buffer_.writeFromNonRT(nullptr);
+
         RCLCPP_INFO(get_node()->get_logger(), "Deactivated TibbleController.");
         return CallbackReturn::SUCCESS;
     }

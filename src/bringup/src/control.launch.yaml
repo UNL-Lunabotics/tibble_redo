@@ -1,0 +1,32 @@
+%YAML 1.2
+---
+launch:
+  - arg:
+      name: "robot_name"
+      default: "robot"
+  - arg:
+      name: "use_sim"
+      default: "false"
+
+  # This is the custom tibble controller
+  - node:
+      pkg: "controller_manager"
+      exec: "ros2_control_node"
+      # let this default to what tibble_controller.yaml puts in
+      param:
+        - from: "$(find-pkg-share control)/config/$(var robot_name)_controller.yaml"
+      unless: "$(var use_sim)"
+  
+  - node:
+      pkg: "controller_manager"
+      exec: "spawner"
+      name: "joint_state_broadcaster" # These both must match tibble_controller.yaml
+      args: "joint_state_broadcaster"
+
+  # This is a basic differential drive controller, good for testing
+  - node:
+      pkg: "controller_manager"
+      exec: "spawner"
+      name: "diff_controller_manager"
+      args: "diff_cont" #TODO: give it controller args with --param-file
+      if: "$(var use_sim)"
