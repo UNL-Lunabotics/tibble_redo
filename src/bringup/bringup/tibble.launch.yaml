@@ -8,7 +8,7 @@ launch:
       # "sim_teleop", "sim_dual", "sim_test"
       # Where _teleop means autonomy disabled and _dual means autonomy hotswapping enabled.
       # Where real_test means using a mock hardware interface and sim_test means no controllers launched.
-      name: "robot_mode"
+      name: "mode"
       default: "real_dual"
       choice:
         - value: "real_teleop"
@@ -42,7 +42,7 @@ launch:
 
   # Launch/configure/include common (everything uses it) things
   - include:
-      file: "$(find-pkg-share bringup)/src/base.launch.yaml"
+      file: "$(find-pkg-share bringup)/bringup/base.launch.yaml"
       let:
         - name: "robot_name"
           value: "$(var robot_name)"
@@ -56,7 +56,7 @@ launch:
 
   # Controls launch
   - include:
-      file: "$(find-pkg-share bringup)/src/control.launch.yaml"
+      file: "$(find-pkg-share bringup)/bringup/control.launch.yaml"
       let:
         - name: "robot_name"
           value: "$(var robot_name)"
@@ -68,7 +68,7 @@ launch:
 
   # Gamepad/joy launch
   - include:
-      file: "$(find-pkg-share bringup)/src/gamepad.launch.yaml"
+      file: "$(find-pkg-share bringup)/bringup/gamepad.launch.yaml"
       let:
         - name: "robot_name"
           value: "$(var robot_name)"
@@ -76,7 +76,7 @@ launch:
 
   # Sim launch
   - include:
-      file: "$(find-pkg-share bringup)/src/sim.launch.yaml"
+      file: "$(find-pkg-share bringup)/bringup/sim.launch.yaml"
       let:
         - name: "robot_name"
           value: "$(var robot_name)"
@@ -85,7 +85,7 @@ launch:
 
   # Wireless launch
   - include:
-      file: "$(find-pkg-share bringup)/src/wireless.launch.yaml"
+      file: "$(find-pkg-share bringup)/bringup/wireless.launch.yaml"
       let:
         - name: "robot_name"
           value: "$(var robot_name)"
