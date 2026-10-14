@@ -21,4 +21,4 @@ launch:
       pkg: "rviz2"
       exec: "rviz2"
       name: "rviz"
-      args: "$(find-pkg-share bringup)/config/view_urdf.rviz"
+      args: "-d $(find-pkg-share bringup)/config/view_urdf.rviz"
