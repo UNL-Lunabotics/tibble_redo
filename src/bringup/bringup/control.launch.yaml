@@ -42,6 +42,6 @@ launch:
   - node:
       pkg: "controller_manager"
       exec: "spawner"
-      name: "diff_controller_manager"
+      name: "diff_drive_controller"
       args: "diff_cont" #TODO: give it controller args with --param-file
       if: "$(var use_sim)"

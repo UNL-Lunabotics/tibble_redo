@@ -49,7 +49,7 @@ launch:
         - name: "use_sim"
           value: "$(var use_sim)"
         - name: "use_control"
-          value: "true"
+          value: "$(var use_control)"
         - name: "use_mock_hardware"
           value: "$(var use_mock_hardware)"
 
