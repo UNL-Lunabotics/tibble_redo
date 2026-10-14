@@ -1,5 +1,8 @@
 command_center_node:
   ros__parameters:
+    device_id: 0
+    deadzone: 0.05
+    autorepeat_rate: 20.0
     # Mappings can be found under the game_controller_node index map https://index.ros.org/p/joy/
     
     # Universal buttons

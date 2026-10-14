@@ -66,9 +66,6 @@ launch:
           value: "$(var use_sim)"
   
 
-  # TODO: Supervisor launch
-
-
   # Gamepad/joy launch
   - include:
       file: "$(find-pkg-share bringup)/src/gamepad.launch.yaml"

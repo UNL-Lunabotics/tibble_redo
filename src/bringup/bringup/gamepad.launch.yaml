@@ -7,7 +7,7 @@ launch:
 
   - let:
       name: "joy_params"
-      value: "$(find-pkg-share control)/config/joystick.yaml"
+      value: "$(find-pkg-share control)/config/gamepad.yaml"
   - let:
       name: "twist_mux_params"
       value: "$(find-pkg-share control)/config/twist_mux.yaml"
@@ -18,6 +18,9 @@ launch:
       name: "joy"
       param:
         - from: "$(var joy_params)"
+      # remap:
+      #   - from: ""
+
   - node:
       pkg: "twist_mux"
       exec: "twist_mux"
