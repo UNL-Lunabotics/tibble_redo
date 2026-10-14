@@ -17,7 +17,7 @@ class Supervisor(Node):
         super().__init__('tibble_supervisor')
 
         # Topic names
-        self.declare_parameter('cmd_vel_topic', '/cmd_vel')
+        self.declare_parameter('cmd_vel_topic', '/cmd_vel_out')
         self.declare_parameter('joy_topic', '/joy')
         self.declare_parameter('command_topic', '/tibble_command')
 

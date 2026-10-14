@@ -8,6 +8,14 @@ launch:
       name: "use_sim"
       default: "false"
 
+  # This is the supervisor that manages /joy and the state machine
+  - node:
+      pkg: "supervisor"
+      exec: "$(var robot_name)_supervisor"
+      name: "supervisor"
+      param:
+        - from: "$(find-pkg-share supervisor)/config/$(var robot_name)_supervisor.yaml"
+
   # This is the custom tibble controller
   - node:
       pkg: "controller_manager"
