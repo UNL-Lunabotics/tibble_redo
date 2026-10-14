@@ -1,9 +1,7 @@
 #ifndef TIBBLE_CONTROLLER_HPP
 #define TIBBLE_CONTROLLER_HPP
 
-#include <atomic>
 #include <string>
-#include <unordered_map>
 #include <vector>
 
 #include "controller_interface/controller_interface.hpp"
@@ -17,7 +15,7 @@
 #include "realtime_tools/realtime_buffer.hpp"
 #include "rclcpp/qos.hpp"
 #include "rclcpp_lifecycle/node_interfaces/lifecycle_node_interface.hpp"
-#include "geometry_msgs/msg/twist.hpp"
+#include "interfaces/msg/tibble_command.hpp"
 
 namespace tibble_controller
 {
@@ -70,6 +68,14 @@ namespace tibble_controller
             state_interface_map_ = {
                 {"position", &joint_position_state_interface_},
                 {"velocity", &joint_velocity_state_interface_}};
+
+        // NOTE: these indices assume the `joints:` YAML list is, in order:
+        // [DL_Rotate, DR_Rotate, LA_Extend, Excavation_Rotate]
+        static constexpr std::size_t kDlRotate = 0;
+        static constexpr std::size_t kDrRotate = 1;
+        static constexpr std::size_t kLaExtend = 2;
+        static constexpr std::size_t kExcavationRotate = 3;
+
         
         // YAML parameters (that aren't interface related)
         std::string cmd_topic_;
@@ -79,12 +85,16 @@ namespace tibble_controller
         double wheel_separation_;           // meters
         double paddle_speed_;               // radians/second
         double la_speed_;                   // meters/second
+        double la_min_;                     // meters
+        double la_max_;                     // meters
         double excav_dt_speed_multiplier_;
+        double digging_threshold_;
+        double cmd_timeout_;                // any commands older than this are put to 0
         long int telemetry_update_rate_;         // milliseconds
 
-        rclcpp::Subscription<geometry_msgs::msg::Twist>::SharedPtr cmd_vel_sub_;
+        rclcpp::Subscription<interfaces::msg::TibbleCommand>::SharedPtr cmd_sub_;
 
-        realtime_tools::RealtimeBuffer<geometry_msgs::msg::Twist> twist_cmd_buffer_;
+        realtime_tools::RealtimeBuffer<interfaces::msg::TibbleCommand::SharedPtr> cmd_buffer_;
     };
 } // namespace tibble_controller
 
