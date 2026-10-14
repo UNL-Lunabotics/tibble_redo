@@ -16,20 +16,27 @@ launch:
       param:
         - from: "$(find-pkg-share supervisor)/config/$(var robot_name)_supervisor.yaml"
 
-  # This is the custom tibble controller
+  # This is the controller manager
   - node:
       pkg: "controller_manager"
       exec: "ros2_control_node"
       # let this default to what tibble_controller.yaml puts in
       param:
         - from: "$(find-pkg-share control)/config/$(var robot_name)_controller.yaml"
-      unless: "$(var use_sim)"
   
+  # This is the joint state broadcaster
   - node:
       pkg: "controller_manager"
       exec: "spawner"
       name: "joint_state_broadcaster" # These both must match tibble_controller.yaml
       args: "joint_state_broadcaster"
+
+  # This is the custom ROS2 Controller
+  - node:
+      pkg: "controller_manager"
+      exec: "spawner"
+      args: "$(var robot_name)_controller"
+      unless: "$(var use_sim)"
 
   # This is a basic differential drive controller, good for testing
   - node:
