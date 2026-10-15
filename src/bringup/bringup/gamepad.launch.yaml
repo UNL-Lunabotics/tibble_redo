@@ -1,0 +1,44 @@
+%YAML 1.2
+---
+launch:
+  - arg:
+      name: "robot_name"
+      default: "robot"
+  - arg:
+      name: "use_sim_time"
+      default: "false"
+
+  - let:
+      name: "joy_params"
+      value: "$(find-pkg-share control)/config/gamepad.yaml"
+  - let:
+      name: "twist_mux_params"
+      value: "$(find-pkg-share control)/config/twist_mux.yaml"
+
+  # This node reads from the controller
+  - node:
+      pkg: "joy"
+      exec: "joy_node"
+      name: "joy"
+      param:
+        - from: "$(var joy_params)"
+  # This node subscribes to /joy and turns it into cmd_vel_joy
+  - node:
+      pkg: "teleop_twist_joy"
+      exec: "teleop_node"
+      name: "teleop_twist_joy"
+      param:
+        - from: "$(var joy_params)"
+        - name: "use_sim_time"
+          value: "$(var use_sim_time)"
+      remap:
+        - from: "cmd_vel"
+          to: "cmd_vel_joy" # This is what twist_mux expects since we have many cmd_vel's
+
+  - node:
+      pkg: "twist_mux"
+      exec: "twist_mux"
+      param:
+        - from: "$(var twist_mux_params)"
+        - name: "use_sim_time"
+          value: "$(var use_sim_time)"

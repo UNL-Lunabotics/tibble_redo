@@ -23,7 +23,7 @@ services:
     stdin_open: true  # Keeps interactive terminal open
 
     volumes:
-      - ..:/workspaces/tibble_redo                # This repository binded as read/write
+      - ..:/home/ubuntu/workspaces/tibble_redo                # This repository binded as read/write
       # You may be asking yourself why are we mounting udev, dev, and serial if this container is privileged?
       # Great question, it's because making it privileged gives the container access to everything but the structure
       # of the directories is not preserved or shared in full, so we need to explicitly bind them to make sure
