@@ -116,6 +116,75 @@
                 <state_interface name="velocity"/>
             </joint>
 
+            <!-- Joints that don't need control still need state_interface for MuJoCo -->
+            <joint name="DL_Rotate">
+                <state_interface name="position"/>
+                <state_interface name="velocity"/>
+            </joint>
+
+            <joint name="DR_Rotate">
+                <state_interface name="position"/>
+                <state_interface name="velocity"/>
+            </joint>
+
+            <joint name="DL_Rotate">
+                <state_interface name="position"/>
+                <state_interface name="velocity"/>
+            </joint>
+
+            <joint name="LLA_Rotate">
+                <state_interface name="position"/>
+                <state_interface name="velocity"/>
+            </joint>
+
+            <joint name="TLA_Rotate">
+                <state_interface name="position"/>
+                <state_interface name="velocity"/>
+            </joint>
+
+            <joint name="Hopper_Rotate">
+                <state_interface name="position"/>
+                <state_interface name="velocity"/>
+            </joint>
+
+            <joint name="HopperDoorRotate">
+                <state_interface name="position"/>
+                <state_interface name="velocity"/>
+            </joint>
+
+            <joint name="H-Latch_Rotate">
+                <state_interface name="position"/>
+                <state_interface name="velocity"/>
+            </joint>
+
+            <joint name="ML_Wheel_Rotate">
+                <state_interface name="position"/>
+                <state_interface name="velocity"/>
+            </joint>
+            <joint name="MR_Wheel_Rotate">
+                <state_interface name="position"/>
+                <state_interface name="velocity"/>
+            </joint>
+
+            <joint name="BL_Wheel_Rotate">
+                <state_interface name="position"/>
+                <state_interface name="velocity"/>
+            </joint>
+            <joint name="BR_Wheel_Rotate">
+                <state_interface name="position"/>
+                <state_interface name="velocity"/>
+            </joint>
+
+            <joint name="TL_Wheel_Rotate">
+                <state_interface name="position"/>
+                <state_interface name="velocity"/>
+            </joint>
+            <joint name="TR_Wheel_Rotate">
+                <state_interface name="position"/>
+                <state_interface name="velocity"/>
+            </joint>
+
+
             <!-- <gpio name="vibe_control">
                 <command_interface name="vibe_enabled"/>
             </gpio>
