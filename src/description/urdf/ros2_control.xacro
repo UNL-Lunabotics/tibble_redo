@@ -75,7 +75,6 @@
         <ros2_control name="MujocoSystem" type="system">
             <hardware>
                 <plugin>mujoco_ros2_control/MujocoSystemInterface</plugin>
-                <param name="pids_config_file">$(find sim)/config/mujoco_pids.yaml</param>
             </hardware>
 
             <!-- Define all the joints that will have a command or state interface -->
@@ -84,7 +83,6 @@
                     <param name="min">-10</param>
                     <param name="max">10</param>
                 </command_interface>
-                <command_interface name="position"/>
                 <state_interface name="position"/>
                 <state_interface name="velocity"/>
             </joint>
@@ -94,14 +92,12 @@
                     <param name="min">-10</param>
                     <param name="max">10</param>
                 </command_interface>
-                <command_interface name="position"/>
                 <state_interface name="position"/>
                 <state_interface name="velocity"/>
             </joint>
 
             <joint name="LA_Extend">
                 <command_interface name="velocity"/>
-                <command_interface name="position"/>
                 <state_interface name="position"/>
                 <state_interface name="velocity"/>
             </joint>
@@ -111,7 +107,6 @@
                     <param name="min">-10</param>
                     <param name="max">10</param>
                 </command_interface>
-                <command_interface name="position"/>
                 <state_interface name="position"/>
                 <state_interface name="velocity"/>
             </joint>
