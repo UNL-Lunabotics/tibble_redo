@@ -19,7 +19,7 @@ launch:
         - value: "sim_test"
   - arg:
       name: "use_wireless"
-      default: "true"
+      default: "false" # TODO: change for comp, this is for my sanity
 
 
   # Infer finer parameters based on mode chosen
@@ -74,6 +74,7 @@ launch:
           value: "$(var robot_name)"
         - name: "use_sim_time"
           value: "$(var use_sim)"
+      unless: "$(var use_wireless)"
 
 
   # Sim launch
@@ -95,3 +96,4 @@ launch:
 
 
   # GUI launch (rerun)
+  # This should use an unless: wireless

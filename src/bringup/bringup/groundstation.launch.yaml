@@ -1,0 +1,18 @@
+%YAML 1.2
+---
+launch:
+  # Basically the only thing this has to do is launch visuals and joy
+  - let:
+      name: "robot_name"
+      value: "tibble"
+
+  # Gamepad/joy launch
+  - include:
+      file: "$(find-pkg-share bringup)/bringup/gamepad.launch.yaml"
+      let:
+        - name: "robot_name"
+          value: "$(var robot_name)"
+        - name: "use_sim_time"
+          value: "false"  # there should be no reason to do wireless sim
+
+  # TODO, rerun launchs
