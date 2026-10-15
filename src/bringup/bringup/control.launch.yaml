@@ -43,7 +43,7 @@ launch:
       pkg: "controller_manager"
       exec: "spawner"
       name: "diff_drive_controller"
-      args:  "diff_drive_controller --controller-ros-args '-r /diff_drive_controller/cmd_vel:=/cmd_vel -r /diff_drive_controller/odom:=/odom'"
+      args:  "diff_drive_controller --controller-ros-args '-r /diff_drive_controller/cmd_vel:=/cmd_vel_out -r /diff_drive_controller/odom:=/odom'"
       param:
         - from: "$(find-pkg-share control)/config/$(var robot_name)_controller.yaml"
       if: "$(var use_sim)"
