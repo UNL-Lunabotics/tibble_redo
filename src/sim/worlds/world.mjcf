@@ -8,7 +8,7 @@
   </default>
 
   <asset>
-    <texture name="tag_tex" type="2d" file="/home/ubuntu/workspaces/tibble_redo/src/sim/worlds/tag36h11_0.png" />
+    <texture name="tag_tex" type="2d" file="tag36h11_0.png" />
     <material name="tag_mat" texture="tag_tex" texuniform="false" specular="0" shininess="0" />
   </asset>
 

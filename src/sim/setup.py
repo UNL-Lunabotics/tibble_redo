@@ -16,6 +16,7 @@ setup(
         # `*.*` means all files/folders with any name/extension
         (os.path.join("share", package_name, "worlds"), glob("worlds/*.sdf")),
         (os.path.join("share", package_name, "worlds"), glob("worlds/*.mjcf")),
+        (os.path.join("share", package_name, "worlds", "assets"), glob("worlds/assets/*.*")),
         (os.path.join("share", package_name, "worlds", "meshes"), glob("worlds/meshes/*.*")),
         (os.path.join("share", package_name, "worlds", "meshes", "artemis_arena"), glob("worlds/meshes/artemis_arena/*.*")),
         (os.path.join("share", package_name, "worlds", "meshes", "artemis_arena", "arena_columns"), glob("worlds/meshes/artemis_arena/arena_columns/*.*")),
