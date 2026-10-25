@@ -30,7 +30,7 @@
         <joint joint1="BR_Wheel_Rotate" joint2="FR_Wheel_Rotate"/>
         <joint joint1="TR_Wheel_Rotate" joint2="FR_Wheel_Rotate"/>
       </equality>
-      <extension>
+      <!-- <extension>
         <plugin plugin="mujoco.plugin.lidar">
           <instance name="lidar">
             <config key="resolution" value="360 1"/>
@@ -40,11 +40,11 @@
             <config key="min_range" value="0.1"/>
           </instance>
         </plugin>
-      </extension>
+      </extension> -->
 
-      <sensor>
+      <!-- <sensor>
         <plugin name="lidar" instance="lidar" objtype="site" objname="lidar_link_optical"/>
-      </sensor>
+      </sensor> -->
     </raw_inputs>
 
     <!-- Specific inputs that require processing from the conversion script-->
@@ -55,13 +55,33 @@
       <!-- The camera with the specified values will be added at the specified site name. -->
       <!-- The position and quaterinion will be filled in by the converter -->
 
-      <camera site="camera_link_optical" name="camera" fovy="58" mode="fixed" resolution="640 480"/>
+      <!-- <camera site="camera_link_optical" name="camera" fovy="58" mode="fixed" resolution="640 480"/> -->
 
       <!-- The element with the type and name as listed below will be modified with the remaining attributes -->
       <!-- If the attribute already existed, it will be overwritten -->
       <!-- Note that the type and name elements are required -->
 
       <!-- <modify_element type="joint" name="DL_Rotate" damping="0.1" armature="0.1"/> -->
+
+      <!-- Per-part visual colors (OBJ meshes ignore URDF colors) -->
+      <modify_element type="geom" mesh="BLA"          class="visual" rgba="0.667 0.557 0.322 1"/>
+      <modify_element type="geom" mesh="BL_Wheel"     class="visual" rgba="0.565 0.667 0.882 1"/>
+      <modify_element type="geom" mesh="BR_Wheel"     class="visual" rgba="0.698 0.682 0.427 1"/>
+      <modify_element type="geom" mesh="Chassis"      class="visual" rgba="0.859 0.584 0.561 1"/>
+      <modify_element type="geom" mesh="DL_Wheel"     class="visual" rgba="0.361 0.635 0.522 1"/>
+      <modify_element type="geom" mesh="DR_Wheel"     class="visual" rgba="0.718 0.616 0.839 1"/>
+      <modify_element type="geom" mesh="Excavation"   class="visual" rgba="0.286 0.631 0.667 1"/>
+      <modify_element type="geom" mesh="FL_Wheel"     class="visual" rgba="0.824 0.584 0.718 1"/>
+      <modify_element type="geom" mesh="FR_Wheel"     class="visual" rgba="0.400 0.737 0.694 1"/>
+      <modify_element type="geom" mesh="Hopper"       class="visual" rgba="0.537 0.725 0.537 1"/>
+      <modify_element type="geom" mesh="Hopper_Door"  class="visual" rgba="0.549 0.541 0.769 1"/>
+      <modify_element type="geom" mesh="Hopper_Latch" class="visual" rgba="0.817 0.627 0.443 1"/>
+      <modify_element type="geom" mesh="LA"           class="visual" rgba="0.420 0.714 0.827 1"/>
+      <modify_element type="geom" mesh="ML_Wheel"     class="visual" rgba="0.525 0.608 0.380 1"/>
+      <modify_element type="geom" mesh="MR_Wheel"     class="visual" rgba="0.675 0.502 0.686 1"/>
+      <modify_element type="geom" mesh="TLA"          class="visual" rgba="0.745 0.486 0.545 1"/>
+      <modify_element type="geom" mesh="TL_Wheel"     class="visual" rgba="0.745 0.506 0.400 1"/>
+      <modify_element type="geom" mesh="TR_Wheel"     class="visual" rgba="0.392 0.592 0.765 1"/>
     </processed_inputs>
   </mujoco_inputs>
 </robot>
