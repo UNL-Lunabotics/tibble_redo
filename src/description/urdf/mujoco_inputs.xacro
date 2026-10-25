@@ -5,7 +5,7 @@
     <!-- The contents of `raw_inputs` will be copied and pasted directly into the MJCF -->
     <raw_inputs>
       <option integrator="implicitfast"/>
-      <compiler texturedir="$(find sim)/worlds/assets"/>
+      <compiler texturedir="$(find sim)/worlds/textures"/>
 
       <default>
         <default class="visual">
