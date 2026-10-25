@@ -6,50 +6,66 @@
     <geom friction="1.0 0.8 0.01" condim="4" />
     <joint damping="0.1" frictionloss="0.01" />
   </default>
+
+  <asset>
+    <texture name="tag_tex" type="2d" file="/home/ubuntu/workspaces/tibble_redo/src/sim/worlds/tag36h11_0.png" />
+    <material name="tag_mat" texture="tag_tex" texuniform="false" specular="0" shininess="0" />
+  </asset>
+
   <worldbody>
     <body name="ground_plane" pos="0 0 0">
       <inertial mass="1" pos="0 0 0" diaginertia="1 1 1" />
-      <geom type="plane" size="100 100 0.1" friction="1.0 0.8 0.01" />
+      <geom type="plane" size="100 100 0.1" friction="1.0 0.8 0.01" rgba="0.75 0.75 0.75 1" />
     </body>
+
+    <body name="tag_box" pos="3 1 0.3">
+      <inertial mass="1" pos="0 0 0" diaginertia="0.06 0.06 0.06" />
+      <geom type="box" size="0.3 0.3 0.3" rgba="1 1 1 1" />
+      <geom name="tag_face" type="plane" size="0.1125 0.1125 0.01" pos="-0.301 0 0" xyaxes="0 -1 0 0 0 1" material="tag_mat" contype="0" conaffinity="0" />
+    </body>
+
     <body name="box" pos="2.8417219933466216 2.3179857352986479 0.49999999990199806">
       <inertial mass="1" pos="0 0 0" diaginertia="0.16666 0.16666 0.16666" />
-      <geom type="box" size="0.5 0.5 0.5" friction="1.0 0.8 0.01" />
+      <geom type="box" size="0.5 0.5 0.5" rgba="0.85 0.2 0.2 1" />
     </body>
     <body name="box_0" pos="-1.655056733151445 1.7780978645303196 0.49999999990199806">
       <inertial mass="1" pos="0 0 0" diaginertia="0.16666 0.16666 0.16666" />
-      <geom type="box" size="0.5 0.5 0.5" friction="1.0 0.8 0.01" />
+      <geom type="box" size="0.5 0.5 0.5" rgba="0.85 0.2 0.2 1" />
     </body>
     <body name="box_1" pos="2.2530130565463509 -2.5291287914817251 0.49999999990199806">
       <inertial mass="1" pos="0 0 0" diaginertia="0.16666 0.16666 0.16666" />
-      <geom type="box" size="0.5 0.5 0.5" friction="1.0 0.8 0.01" />
+      <geom type="box" size="0.5 0.5 0.5" rgba="0.85 0.2 0.2 1" />
     </body>
     <body name="box_2" pos="-2.1994093670324379 -2.0956478539805325 0.49999999990199806">
       <inertial mass="1" pos="0 0 0" diaginertia="0.16666 0.16666 0.16666" />
-      <geom type="box" size="0.5 0.5 0.5" friction="1.0 0.8 0.01" />
+      <geom type="box" size="0.5 0.5 0.5" rgba="0.85 0.2 0.2 1" />
     </body>
-    <body name="sphere" pos="1.7558753273133232 -0.14177392862852622 0.499999999902001">
+
+    <body name="sphere" pos="1.0 -0.5 0.5">
       <inertial mass="1" pos="0 0 0" diaginertia="0.1 0.1 0.1" />
-      <geom type="sphere" size="0.5" friction="1.0 0.8 0.01" />
+      <geom type="sphere" size="0.5" rgba="0.2 0.7 0.3 1" />
     </body>
-    <body name="cone" pos="-0.45892397368634047 -1.1120748308789254 0.49999999993296756">
+
+    <body name="cone" pos="-0.6 -1.5 0.5">
       <inertial mass="1" pos="0 0 0" diaginertia="0.075 0.075 0.075" />
-      <geom type="cylinder" size="0.5 0.5" friction="1.0 0.8 0.01" />
+      <geom type="cylinder" size="0.5 0.5" rgba="0.95 0.55 0.1 1" />
     </body>
     <body name="cone_0" pos="-0.21110311954607025 1.2444863752518083 0.49999999993296756">
       <inertial mass="1" pos="0 0 0" diaginertia="0.075 0.075 0.075" />
-      <geom type="cylinder" size="0.5 0.5" friction="1.0 0.8 0.01" />
+      <geom type="cylinder" size="0.5 0.5" rgba="0.95 0.55 0.1 1" />
     </body>
+
     <body name="cylinder" pos="-3.4181480821354935 0.11779292196676421 0.49999942638036005">
       <inertial mass="1" pos="0 0 0" diaginertia="0.14580 0.14580 0.125" />
-      <geom type="cylinder" size="0.5 0.5" friction="1.0 0.8 0.01" />
+      <geom type="cylinder" size="0.5 0.5" rgba="0.2 0.4 0.9 1" />
     </body>
     <body name="cylinder_0" pos="0.81116111290291459 3.0972589908019872 0.49999942638036005">
       <inertial mass="1" pos="0 0 0" diaginertia="0.14580 0.14580 0.125" />
-      <geom type="cylinder" size="0.5 0.5" friction="1.0 0.8 0.01" />
+      <geom type="cylinder" size="0.5 0.5" rgba="0.2 0.4 0.9 1" />
     </body>
     <body name="cylinder_1" pos="0.25970265554276373 -3.3643063096518571 0.49999942638036005">
       <inertial mass="1" pos="0 0 0" diaginertia="0.14580 0.14580 0.125" />
-      <geom type="cylinder" size="0.5 0.5" friction="1.0 0.8 0.01" />
+      <geom type="cylinder" size="0.5 0.5" rgba="0.2 0.4 0.9 1" />
     </body>
   </worldbody>
   <actuator />
