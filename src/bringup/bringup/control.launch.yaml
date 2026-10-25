@@ -23,6 +23,18 @@ launch:
       # let this default to what tibble_controller.yaml puts in
       param:
         - from: "$(find-pkg-share control)/config/$(var robot_name)_controller.yaml"
+      unless: "$(var use_sim)"
+
+  # This is the sim control node
+  - node:
+      pkg: "controller_manager"
+      exec: "ros2_control_node"
+      param:
+        - from: "$(find-pkg-share control)/config/$(var robot_name)_controller.yaml"
+        - from: "$(find-pkg-share sim)/config/mujoco_plugins.yaml"
+        - name: "use_sim_time"
+          value: true
+      if: "$(var use_sim)"
   
   # This is the joint state broadcaster
   - node:
