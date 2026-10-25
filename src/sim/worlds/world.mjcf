@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mujoco model="empty">
+  <compiler angle="radian" />
+  <option timestep="0.002" gravity="0 0 -9.81" />
+  <default>
+    <geom friction="1.0 0.8 0.01" condim="4" />
+    <joint damping="0.1" frictionloss="0.01" />
+  </default>
+  <worldbody>
+    <body name="ground_plane" pos="0 0 0">
+      <inertial mass="1" pos="0 0 0" diaginertia="1 1 1" />
+      <geom type="plane" size="100 100 0.1" friction="1.0 0.8 0.01" />
+    </body>
+    <body name="box" pos="2.8417219933466216 2.3179857352986479 0.49999999990199806">
+      <inertial mass="1" pos="0 0 0" diaginertia="0.16666 0.16666 0.16666" />
+      <geom type="box" size="0.5 0.5 0.5" friction="1.0 0.8 0.01" />
+    </body>
+    <body name="box_0" pos="-1.655056733151445 1.7780978645303196 0.49999999990199806">
+      <inertial mass="1" pos="0 0 0" diaginertia="0.16666 0.16666 0.16666" />
+      <geom type="box" size="0.5 0.5 0.5" friction="1.0 0.8 0.01" />
+    </body>
+    <body name="box_1" pos="2.2530130565463509 -2.5291287914817251 0.49999999990199806">
+      <inertial mass="1" pos="0 0 0" diaginertia="0.16666 0.16666 0.16666" />
+      <geom type="box" size="0.5 0.5 0.5" friction="1.0 0.8 0.01" />
+    </body>
+    <body name="box_2" pos="-2.1994093670324379 -2.0956478539805325 0.49999999990199806">
+      <inertial mass="1" pos="0 0 0" diaginertia="0.16666 0.16666 0.16666" />
+      <geom type="box" size="0.5 0.5 0.5" friction="1.0 0.8 0.01" />
+    </body>
+    <body name="sphere" pos="1.7558753273133232 -0.14177392862852622 0.499999999902001">
+      <inertial mass="1" pos="0 0 0" diaginertia="0.1 0.1 0.1" />
+      <geom type="sphere" size="0.5" friction="1.0 0.8 0.01" />
+    </body>
+    <body name="cone" pos="-0.45892397368634047 -1.1120748308789254 0.49999999993296756">
+      <inertial mass="1" pos="0 0 0" diaginertia="0.075 0.075 0.075" />
+      <geom type="cylinder" size="0.5 0.5" friction="1.0 0.8 0.01" />
+    </body>
+    <body name="cone_0" pos="-0.21110311954607025 1.2444863752518083 0.49999999993296756">
+      <inertial mass="1" pos="0 0 0" diaginertia="0.075 0.075 0.075" />
+      <geom type="cylinder" size="0.5 0.5" friction="1.0 0.8 0.01" />
+    </body>
+    <body name="cylinder" pos="-3.4181480821354935 0.11779292196676421 0.49999942638036005">
+      <inertial mass="1" pos="0 0 0" diaginertia="0.14580 0.14580 0.125" />
+      <geom type="cylinder" size="0.5 0.5" friction="1.0 0.8 0.01" />
+    </body>
+    <body name="cylinder_0" pos="0.81116111290291459 3.0972589908019872 0.49999942638036005">
+      <inertial mass="1" pos="0 0 0" diaginertia="0.14580 0.14580 0.125" />
+      <geom type="cylinder" size="0.5 0.5" friction="1.0 0.8 0.01" />
+    </body>
+    <body name="cylinder_1" pos="0.25970265554276373 -3.3643063096518571 0.49999942638036005">
+      <inertial mass="1" pos="0 0 0" diaginertia="0.14580 0.14580 0.125" />
+      <geom type="cylinder" size="0.5 0.5" friction="1.0 0.8 0.01" />
+    </body>
+  </worldbody>
+  <actuator />
+</mujoco>

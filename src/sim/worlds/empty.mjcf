@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mujoco model="empty">
+  <compiler angle="radian" />
+  <option timestep="0.001" gravity="0 0 -9.8" />
+  <default>
+    <geom friction="1.0 0.8 0.01" condim="4" />
+    <joint damping="0.1" frictionloss="0.01" />
+  </default>
+  <worldbody>
+    <geom name="ground" type="plane" size="100 100 0.1" pos="0 0 -0.1" friction="1.0 0.8 0.01" />
+    <body name="ground_plane_link" pos="0 0 0">
+      <inertial mass="1" pos="0 0 0" diaginertia="1 1 1" />
+    </body>
+  </worldbody>
+  <actuator />
+</mujoco>

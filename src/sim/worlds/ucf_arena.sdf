@@ -1,0 +1,383 @@
+<?xml version='1.0' encoding='utf-8'?>
+<sdf version="1.11">
+  <world name="default">
+    <gravity>0 0 -9.8100000000000005</gravity>
+    <magnetic_field>0 -0.5 0</magnetic_field>
+    <wind>
+      <linear_velocity>0 0 0</linear_velocity>
+    </wind>
+    <physics default="false" type="ode">
+      <max_step_size>0.001</max_step_size>
+      <real_time_factor>1</real_time_factor>
+      <max_contacts>20</max_contacts>
+    </physics>
+    <model name="static">
+      <static>true</static>
+      <self_collide>false</self_collide>
+      <allow_auto_disable>true</allow_auto_disable>
+      <enable_wind>false</enable_wind>
+      <pose>0 0 0 0 0 0</pose>
+      <link name="link_0">
+        <pose>0 0 0 0 0 0</pose>
+        <inertial>
+          <pose>0 0 0 0 0 0</pose>
+          <mass>1</mass>
+          <inertia>
+            <ixx>1</ixx>
+            <ixy>0</ixy>
+            <ixz>0</ixz>
+            <iyy>1</iyy>
+            <iyz>0</iyz>
+            <izz>1</izz>
+          </inertia>
+        </inertial>
+        <enable_wind>false</enable_wind>
+        <light name="sun" type="spot">
+          <pose>0 0 10 0 0 0</pose>
+          <cast_shadows>false</cast_shadows>
+          <intensity>1</intensity>
+          <direction>-0.48336800000000002 0.096673599999999998 -0.87006300000000003</direction>
+          <diffuse>0.400000006 0.400000006 0.400000006 1</diffuse>
+          <specular>0.100000001 0.100000001 0.100000001 1</specular>
+          <attenuation>
+            <range>10</range>
+            <linear>0</linear>
+            <constant>1</constant>
+            <quadratic>0</quadratic>
+          </attenuation>
+          <spot>
+            <inner_angle>0</inner_angle>
+            <outer_angle>1.5707963267948966</outer_angle>
+            <falloff>2</falloff>
+          </spot>
+        </light>
+      </link>
+    </model>
+    <model name="model_for_arena_barriers">
+      <static>false</static>
+      <self_collide>false</self_collide>
+      <allow_auto_disable>true</allow_auto_disable>
+      <enable_wind>false</enable_wind>
+      <pose>0 0 0 0 0 0</pose>
+      <link name="arena_barriers">
+        <pose>2.5899999999999999 0 1.2 0 0 1.5707963267948963</pose>
+        <inertial>
+          <pose>-0.011772318408499285 -1.4593772237087714 -1.020880188593531 1.5708741175827814 0.00018078274386181101 3.6588203858790454e-05</pose>
+          <mass>3815.5457029708177</mass>
+          <inertia>
+            <ixx>16372.83601326297</ixx>
+            <ixy>0</ixy>
+            <ixz>0</ixz>
+            <iyy>16266.860251093742</iyy>
+            <iyz>0</iyz>
+            <izz>111.90017699945705</izz>
+          </inertia>
+        </inertial>
+        <enable_wind>false</enable_wind>
+        <collision name="collision_0">
+          <pose>0 0 0 0 0 0</pose>
+          <geometry>
+            <mesh>
+              <uri>meshes/ucf_arena/arena_barriers/arena_barriers.obj</uri>
+              <scale>1 1 1</scale>
+            </mesh>
+          </geometry>
+          <surface>
+            <contact>
+              <collide_bitmask>255</collide_bitmask>
+            </contact>
+            <friction>
+              <ode>
+                <mu>1</mu>
+                <mu2>1</mu2>
+                <slip1>0</slip1>
+                <slip2>0</slip2>
+                <fdir1>0 0 0</fdir1>
+              </ode>
+            </friction>
+          </surface>
+        </collision>
+      <visual name="visual_0">
+          <pose>0 0 0 0 0 0</pose>
+          <geometry>
+            <mesh>
+              <uri>meshes/ucf_arena/arena_barriers/arena_barriers.obj</uri>
+              <scale>1 1 1</scale>
+            </mesh>
+          </geometry>
+          </visual>
+      </link>
+      <joint name="fixed_world_arena_barriers_joint" type="fixed">
+        <pose>0 0 0 0 0 0</pose>
+        <parent>world</parent>
+        <child>arena_barriers</child>
+      </joint>
+    </model>
+    <model name="model_for_arena_rods">
+      <static>false</static>
+      <self_collide>false</self_collide>
+      <allow_auto_disable>true</allow_auto_disable>
+      <enable_wind>false</enable_wind>
+      <pose>0 0 0 0 0 0</pose>
+      <link name="arena_rods">
+        <pose>9.5999999999999996 0 1.2 0 0 1.5707963267948963</pose>
+        <inertial>
+          <pose>3.1559813354067413e-05 2.7714656092182155 -0.88718361467859053 -3.1415904926645188 -1.5707963267948966 0</pose>
+          <mass>164.26528632429296</mass>
+          <inertia>
+            <ixx>1616.6253868168046</ixx>
+            <ixy>0</ixy>
+            <ixz>0</ixz>
+            <iyy>1567.9481569879722</iyy>
+            <iyz>0</iyz>
+            <izz>65.665787158106539</izz>
+          </inertia>
+        </inertial>
+        <enable_wind>false</enable_wind>
+        <collision name="collision_0">
+          <pose>0 0 0 0 0 0</pose>
+          <geometry>
+            <mesh>
+              <uri>meshes/ucf_arena/arena_rods/arena_rods.obj</uri>
+              <scale>1 1 1</scale>
+            </mesh>
+          </geometry>
+          <surface>
+            <contact>
+              <collide_bitmask>255</collide_bitmask>
+            </contact>
+            <friction>
+              <ode>
+                <mu>1</mu>
+                <mu2>1</mu2>
+                <slip1>0</slip1>
+                <slip2>0</slip2>
+                <fdir1>0 0 0</fdir1>
+              </ode>
+            </friction>
+          </surface>
+        </collision>
+      <visual name="visual_0">
+          <pose>0 0 0 0 0 0</pose>
+          <geometry>
+            <mesh>
+              <uri>meshes/ucf_arena/arena_rods/arena_rods.obj</uri>
+              <scale>1 1 1</scale>
+            </mesh>
+          </geometry>
+          </visual>
+      </link>
+      <joint name="fixed_world_arena_rods_joint" type="fixed">
+        <pose>0 0 0 0 0 0</pose>
+        <parent>world</parent>
+        <child>arena_rods</child>
+      </joint>
+    </model>
+    <model name="model_for_arena_walls">
+      <static>false</static>
+      <self_collide>false</self_collide>
+      <allow_auto_disable>true</allow_auto_disable>
+      <enable_wind>false</enable_wind>
+      <pose>0 0 0 0 0 0</pose>
+      <link name="arena_walls">
+        <pose>4 0 1.2 0 0 1.5707963267948963</pose>
+        <inertial>
+          <pose>0.0013477964270038295 0.0011247177865077178 -5.3223695344616516e-05 1.93774504834399 -1.5707641191664208 1.205976552700937</pose>
+          <mass>110009.94928409929</mass>
+          <inertia>
+            <ixx>2061430.9977758948</ixx>
+            <ixy>0</ixy>
+            <ixz>0</ixz>
+            <iyy>1273744.4748888984</iyy>
+            <iyz>0</iyz>
+            <izz>1004863.2876896031</izz>
+          </inertia>
+        </inertial>
+        <enable_wind>false</enable_wind>
+        <collision name="collision_0">
+          <pose>0 0 0 0 0 0</pose>
+          <geometry>
+            <mesh>
+              <uri>meshes/ucf_arena/arena_walls/arena_walls.obj</uri>
+              <scale>1 1 1</scale>
+            </mesh>
+          </geometry>
+          <surface>
+            <contact>
+              <collide_bitmask>255</collide_bitmask>
+            </contact>
+            <friction>
+              <ode>
+                <mu>1</mu>
+                <mu2>1</mu2>
+                <slip1>0</slip1>
+                <slip2>0</slip2>
+                <fdir1>0 0 0</fdir1>
+              </ode>
+            </friction>
+          </surface>
+        </collision>
+      <visual name="visual_0">
+          <pose>0 0 0 0 0 0</pose>
+          <geometry>
+            <mesh>
+              <uri>meshes/ucf_arena/arena_walls/arena_walls.obj</uri>
+              <scale>1 1 1</scale>
+            </mesh>
+          </geometry>
+          </visual>
+      </link>
+      <joint name="fixed_world_arena_walls_joint" type="fixed">
+        <pose>0 0 0 0 0 0</pose>
+        <parent>world</parent>
+        <child>arena_walls</child>
+      </joint>
+    </model>
+    <model name="model_for_arena_windows">
+      <static>false</static>
+      <self_collide>false</self_collide>
+      <allow_auto_disable>true</allow_auto_disable>
+      <enable_wind>false</enable_wind>
+      <pose>0 0 0 0 0 0</pose>
+      <link name="arena_windows">
+        <pose>4 0 1.2 0 0 1.5707963267948963</pose>
+        <inertial>
+          <pose>-1.4076490825498242e-06 -4.4523868402550011e-07 -5.0241903982200172e-07 -3.1415874583175194 -1.5707963118937354 0</pose>
+          <mass>262838.53140566143</mass>
+          <inertia>
+            <ixx>4433121.1144381855</ixx>
+            <ixy>0</ixy>
+            <ixz>0</ixz>
+            <iyy>2555307.2942922302</iyy>
+            <iyz>0</iyz>
+            <izz>2047396.5599914358</izz>
+          </inertia>
+        </inertial>
+        <enable_wind>false</enable_wind>
+        <collision name="collision_0">
+          <pose>0 0 0 0 0 0</pose>
+          <geometry>
+            <mesh>
+              <uri>meshes/ucf_arena/arena_windows/arena_windows.obj</uri>
+              <scale>1 1 1</scale>
+            </mesh>
+          </geometry>
+          <surface>
+            <contact>
+              <collide_bitmask>255</collide_bitmask>
+            </contact>
+            <friction>
+              <ode>
+                <mu>1</mu>
+                <mu2>1</mu2>
+                <slip1>0</slip1>
+                <slip2>0</slip2>
+                <fdir1>0 0 0</fdir1>
+              </ode>
+            </friction>
+          </surface>
+        </collision>
+      <visual name="visual_0">
+          <pose>0 0 0 0 0 0</pose>
+          <geometry>
+            <mesh>
+              <uri>meshes/ucf_arena/arena_windows/arena_windows.obj</uri>
+              <scale>1 1 1</scale>
+            </mesh>
+          </geometry>
+          </visual>
+      </link>
+      <joint name="fixed_world_arena_windows_joint" type="fixed">
+        <pose>0 0 0 0 0 0</pose>
+        <parent>world</parent>
+        <child>arena_windows</child>
+      </joint>
+    </model>
+    <model name="model_for_lunar_surface">
+      <static>false</static>
+      <self_collide>false</self_collide>
+      <allow_auto_disable>true</allow_auto_disable>
+      <enable_wind>false</enable_wind>
+      <pose>0 0 0 0 0 0</pose>
+      <link name="lunar_surface">
+        <pose>3.5 2.6000000000000001 0 0 0 0</pose>
+        <inertial>
+          <pose>3.5 2.6000000000000001 0 0 0 0</pose>
+          <mass>0</mass>
+          <inertia>
+            <ixx>0</ixx>
+            <ixy>0</ixy>
+            <ixz>0</ixz>
+            <iyy>0</iyy>
+            <iyz>0</iyz>
+            <izz>0</izz>
+          </inertia>
+        </inertial>
+        <enable_wind>false</enable_wind>
+        <collision name="collision_floor">
+          <pose>0 0 -0.32000000000000001 0 0 0</pose>
+          <geometry>
+            <plane>
+              <normal>0 0 1</normal>
+              <size>1000000 1000000</size>
+            </plane>
+          </geometry>
+          <surface>
+            <contact>
+              <collide_bitmask>255</collide_bitmask>
+            </contact>
+            <friction>
+              <ode>
+                <mu>1</mu>
+                <mu2>1</mu2>
+                <slip1>0</slip1>
+                <slip2>0</slip2>
+                <fdir1>0 0 0</fdir1>
+              </ode>
+            </friction>
+          </surface>
+        </collision>
+        <visual name="visual_floor">
+          <pose>0 0 -0.32000000000000001 0 0 0</pose>
+          <geometry>
+            <plane>
+              <normal>0 0 1</normal>
+              <size>1000000 1000000</size>
+            </plane>
+          </geometry>
+          <cast_shadows>true</cast_shadows>
+          <laser_retro>0</laser_retro>
+          <transparency>0</transparency>
+          <visibility_flags>4294967295</visibility_flags>
+          <material>
+            <ambient>1 1 1 1</ambient>
+            <diffuse>1 1 1 1</diffuse>
+            <specular>0.5 0.5 0.5 1</specular>
+            <emissive>0 0 0 1</emissive>
+            <render_order>0</render_order>
+            <lighting>true</lighting>
+            <double_sided>false</double_sided>
+            <shader type="pixel" />
+          </material>
+        </visual>
+      </link>
+      <joint name="fixed_world_lunar_surface_joint" type="fixed">
+        <pose>0 0 0 0 0 0</pose>
+        <parent>world</parent>
+        <child>lunar_surface</child>
+      </joint>
+    </model>
+    <atmosphere type="adiabatic">
+      <temperature>288.14999999999998</temperature>
+      <pressure>101325</pressure>
+      <temperature_gradient>-0.0064999999999999997</temperature_gradient>
+    </atmosphere>
+    <scene>
+      <ambient>0.400000006 0.400000006 0.400000006 1</ambient>
+      <background>0.699999988 0.699999988 0.699999988 1</background>
+      <grid>true</grid>
+      <origin_visual>true</origin_visual>
+      <shadows>true</shadows>
+    </scene>
+  </world>
+</sdf>
