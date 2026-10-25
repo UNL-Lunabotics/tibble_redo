@@ -253,12 +253,9 @@ class RobotSubscriber(Node):  # type: ignore[misc]
         pts = structured_to_unstructured(pts)
 
         # Turn every pt into a line-segment from the origin to the point.
-        origin = (pts / np.linalg.norm(pts, axis=1).reshape(-1, 1)) * 0.3
-        segs = np.hstack([origin, pts]).reshape(pts.shape[0] * 2, 3)
-
-        rr.log("scan", rr.LineStrips3D(segs, radii=0.0025, colors=[255, 165, 0]))
+        rr.log("scan", rr.Points3D(pts, radii=0.02, colors=[255, 165, 0]))
         rr.log("scan", rr.CoordinateFrame(frame=scan.header.frame_id))
-
+  
     def urdf_callback(self, urdf_msg: String) -> None:
         """
         Forwards the robot description message to Rerun's built-in URDF loader.
