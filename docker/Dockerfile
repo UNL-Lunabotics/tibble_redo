@@ -77,9 +77,6 @@ RUN if ! id -u $USER_UID >/dev/null 2>&1; then \
 RUN groupadd -g 18 hostserial || true && \
     usermod -aG hostserial $USERNAME
 
-#################### RERUN ####################
-RUN python3 -m pip install --no-cache-dir --break-system-packages --ignore-installed rerun-sdk
-
 #################### ROS PACKAGES ####################
 # The .dockerignore will only allow package.xml files to be copied over
 # This is important because otherwise the layer would need to be rebuilt every time the source code changes
@@ -135,6 +132,13 @@ RUN echo "source /opt/ros/${ROS_DISTRO}/setup.bash" \
 #################### USER ENV ####################
 USER $USERNAME
 WORKDIR /home/${USERNAME}/workspaces/${REPO_NAME}/
+
+#################### RERUN ####################
+RUN pipx install rerun-sdk && \
+    pipx runpip rerun-sdk install --no-cache-dir "numpy<2" "pyarrow<19" && \
+    pipx ensurepath
+# Expose pipx's isolated Rerun packages so ROS 2 nodes can import them.
+ENV PYTHONPATH="/home/${USERNAME}/.local/share/pipx/venvs/rerun-sdk/lib/python3.12/site-packages:${PYTHONPATH}"
 
 # This step sources the underlay and overlay so you can immediately run ros2 launch commands (if it's already built)
 RUN printf "\nsource /opt/ros/${ROS_DISTRO}/setup.bash\n" >> ~/.bashrc && \
