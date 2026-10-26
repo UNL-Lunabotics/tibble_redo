@@ -7,6 +7,8 @@
     <joint damping="0.1" frictionloss="0.01" />
   </default>
   <worldbody>
+    <light directional="true" pos="0 0 5" dir="0 0 -1" diffuse="0.8 0.8 0.8" specular="0.2 0.2 0.2" castshadow="false"/>
+
     <body name="ground_plane" pos="0 0 0">
       <inertial mass="1" pos="0 0 0" diaginertia="1 1 1" />
       <geom type="plane" size="100 100 0.1" friction="1.0 0.8 0.01" />
@@ -52,5 +54,4 @@
       <geom type="cylinder" size="0.5 0.5" friction="1.0 0.8 0.01" />
     </body>
   </worldbody>
-  <actuator />
 </mujoco>

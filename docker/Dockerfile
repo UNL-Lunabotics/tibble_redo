@@ -61,9 +61,6 @@ RUN --mount=type=cache,target=/var/cache/apt \
     ros-${ROS_DISTRO}-laser-geometry
 
 
-#################### PLATFORMIO ####################
-RUN pipx install platformio && pipx ensurepath
-
 #################### USER SETUP ####################
 # This needs to run before COPY so you can use the variables
 RUN if ! id -u $USER_UID >/dev/null 2>&1; then \
@@ -133,12 +130,26 @@ RUN echo "source /opt/ros/${ROS_DISTRO}/setup.bash" \
 USER $USERNAME
 WORKDIR /home/${USERNAME}/workspaces/${REPO_NAME}/
 
-#################### RERUN ####################
-RUN pipx install rerun-sdk && \
-    pipx runpip rerun-sdk install --no-cache-dir "numpy<2" "pyarrow<19" && \
-    pipx ensurepath
+#################### pix installs ####################
+# Seems to not install properly if pipx
+# install is outside the user environment
+
+ENV PATH="/home/${USERNAME}/.local/bin:$PATH"
+
 # Expose pipx's isolated Rerun packages so ROS 2 nodes can import them.
 ENV PYTHONPATH="/home/${USERNAME}/.local/share/pipx/venvs/rerun-sdk/lib/python3.12/site-packages:${PYTHONPATH}"
+
+# PlatformIO
+RUN pipx install platformio
+
+# MuJoCo Scene Editor
+RUN pipx install yourdfpy && pipx install mujoco-scene-editor
+RUN pipx inject mujoco-scene-editor yourdfpy
+
+# Rerun
+RUN pipx install rerun-sdk
+
+RUN pipx ensurepath
 
 # This step sources the underlay and overlay so you can immediately run ros2 launch commands (if it's already built)
 RUN printf "\nsource /opt/ros/${ROS_DISTRO}/setup.bash\n" >> ~/.bashrc && \
