@@ -148,6 +148,7 @@ RUN pipx inject mujoco-scene-editor yourdfpy
 
 # Rerun
 RUN pipx install rerun-sdk
+RUN pipx runpip rerun-sdk install --no-cache-dir "numpy<2" "pyarrow<19"
 
 RUN pipx ensurepath
 
