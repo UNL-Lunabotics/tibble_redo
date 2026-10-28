@@ -19,6 +19,7 @@ ARG USER_GID=$USER_UID
 ENV DEBIAN_FRONTEND=noninteractive
 ENV LANG=en_US.UTF-8 LC_ALL=en_US.UTF-8
 ENV PYTHONPATH="${PYTHONPATH}:/usr/local/lib"
+ENV PYTHONPYCACHEPREFIX=/tmp/pycache
 
 
 #################### SYSTEM + DEV TOOLS ####################
@@ -126,7 +127,7 @@ RUN echo "source /opt/ros/${ROS_DISTRO}/setup.bash" \
 USER $USERNAME
 WORKDIR /home/${USERNAME}/workspaces/${REPO_NAME}/
 
-#################### pix installs ####################
+#################### pipx installs ####################
 # Seems to not install properly if pipx
 # install is outside the user environment
 
