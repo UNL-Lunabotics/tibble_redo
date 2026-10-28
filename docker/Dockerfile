@@ -54,11 +54,7 @@ RUN --mount=type=cache,target=/var/cache/apt \
     libegl1-mesa-dev \
     libglu1-mesa-dev \
     libxv1 \
-    libxtst6 \
-    # Rerun ROS2 message conversion helpers
-    ros-${ROS_DISTRO}-cv-bridge \
-    ros-${ROS_DISTRO}-image-geometry \
-    ros-${ROS_DISTRO}-laser-geometry
+    libxtst6
 
 
 #################### USER SETUP ####################
