@@ -57,6 +57,21 @@ RUN --mount=type=cache,target=/var/cache/apt \
     libxtst6
 
 
+#################### PIPX INSTALLS ####################
+
+# Add pipx apps to path
+ENV PIPX_HOME=/opt/pipx
+ENV PIPX_BIN_DIR=/usr/local/bin
+ENV PATH="${PIPX_BIN_DIR}:${PATH}"
+
+# PlatformIO
+RUN pipx install platformio
+
+# MuJoCo Scene Editor
+RUN pipx install mujoco-scene-editor
+RUN pipx inject mujoco-scene-editor yourdfpy
+
+
 #################### USER SETUP ####################
 # This needs to run before COPY so you can use the variables
 RUN if ! id -u $USER_UID >/dev/null 2>&1; then \
@@ -127,20 +142,6 @@ RUN echo "source /opt/ros/${ROS_DISTRO}/setup.bash" \
 USER $USERNAME
 WORKDIR /home/${USERNAME}/workspaces/${REPO_NAME}/
 
-#################### pix installs ####################
-# Seems to not install properly if pipx
-# install is outside the user environment
-
-ENV PATH="/home/${USERNAME}/.local/bin:$PATH"
-
-# PlatformIO
-RUN pipx install platformio
-
-# MuJoCo Scene Editor
-RUN pipx install yourdfpy && pipx install mujoco-scene-editor
-RUN pipx inject mujoco-scene-editor yourdfpy
-
-RUN pipx ensurepath
 
 # This step sources the underlay and overlay so you can immediately run ros2 launch commands (if it's already built)
 RUN printf "\nsource /opt/ros/${ROS_DISTRO}/setup.bash\n" >> ~/.bashrc && \
