@@ -76,7 +76,7 @@ RUN pipx inject mujoco-scene-editor yourdfpy
 # Rerun
 
 # Expose pipx's isolated Rerun packages so ROS 2 nodes can import them.
-ENV PYTHONPATH="/home/${USERNAME}/.local/share/pipx/venvs/rerun-sdk/lib/python3.12/site-packages:${PYTHONPATH}"
+ENV PYTHONPATH="${PIPX_HOME}/venvs/rerun-sdk/lib/python3.12/site-packages:${PYTHONPATH}"
 
 RUN pipx install rerun-sdk
 RUN pipx runpip rerun-sdk install --no-cache-dir "numpy<2" "pyarrow<19"
