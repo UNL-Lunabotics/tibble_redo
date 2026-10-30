@@ -1,0 +1,12 @@
+%YAML 1.2
+---
+launch:
+  - arg:
+      name: "robot_name"
+      default: "robot"
+
+  - node:
+      pkg: bringup
+      exec: rerun_bridge
+      name: rerun_bridge
+      output: screen
