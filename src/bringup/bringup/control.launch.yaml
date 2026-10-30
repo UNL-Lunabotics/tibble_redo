@@ -1,0 +1,49 @@
+%YAML 1.2
+---
+launch:
+  - arg:
+      name: "robot_name"
+      default: "robot"
+  - arg:
+      name: "use_sim"
+      default: "false"
+
+  # This is the supervisor that manages /joy and the state machine
+  - node:
+      pkg: "supervisor"
+      exec: "$(var robot_name)_supervisor"
+      name: "$(var robot_name)_supervisor"
+      param:
+        - from: "$(find-pkg-share supervisor)/config/$(var robot_name)_supervisor.yaml"
+
+  # This is the controller manager
+  - node:
+      pkg: "controller_manager"
+      exec: "ros2_control_node"
+      # let this default to what tibble_controller.yaml puts in
+      param:
+        - from: "$(find-pkg-share control)/config/$(var robot_name)_controller.yaml"
+  
+  # This is the joint state broadcaster
+  - node:
+      pkg: "controller_manager"
+      exec: "spawner"
+      name: "joint_state_broadcaster" # These both must match tibble_controller.yaml
+      args: "joint_state_broadcaster"
+
+  # This is the custom ROS2 Controller
+  - node:
+      pkg: "controller_manager"
+      exec: "spawner"
+      args: "$(var robot_name)_controller"
+      unless: "$(var use_sim)"
+
+  # This is a basic differential drive controller, good for testing
+  - node:
+      pkg: "controller_manager"
+      exec: "spawner"
+      name: "diff_drive_controller"
+      args:  "diff_drive_controller --controller-ros-args '-r /diff_drive_controller/cmd_vel:=/cmd_vel_out -r /diff_drive_controller/odom:=/odom'"
+      param:
+        - from: "$(find-pkg-share control)/config/$(var robot_name)_controller.yaml"
+      if: "$(var use_sim)"

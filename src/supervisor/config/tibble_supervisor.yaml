@@ -1,0 +1,21 @@
+tibble_supervisor:
+  ros__parameters:
+    cmd_vel_topic: /cmd_vel_out        # twist_mux output
+    joy_topic: /joy
+    command_topic: /tibble_command
+
+    publish_rate: 30.0             # Hz
+    cmd_vel_timeout: 0.5           # seconds
+    joy_timeout: 0.5               # seconds
+
+    # TODO test this
+    panic_button: 6
+    mode_manual_button: 7
+    mode_autonomy_button: 8
+    la_extend_button: 0
+    la_retract_button: 3
+    latch_toggle_button: 2
+    vibe_toggle_button: 1
+    drum_axis: 5
+
+    drum_axis_deadzone: 0.05

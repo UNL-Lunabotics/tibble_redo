@@ -64,16 +64,20 @@ target_link_libraries(control PUBLIC
   hardware_interface::hardware_interface
   pluginlib::pluginlib
   realtime_tools::realtime_tools
+  rclcpp::rclcpp
+  rclcpp_lifecycle::rclcpp_lifecycle
+  geometry_msgs::geometry_msgs
+  interfaces::interfaces
 )
 
 # Add executables here (.cpp files that are not the controller or hwc)
 # More executables would just copy/paste the below three blocks and swap out names
-add_executable(command_center src/command_center.cpp)
-ament_target_dependencies(command_center
-  rclcpp
-  interfaces
-)
-target_link_libraries(command_center control)
+# add_executable(name src/name.cpp)
+# ament_target_dependencies(name
+#   rclcpp
+#   interfaces probably
+# )
+# target_link_libraries(name control)
 
 
 ##### EXPORT + INSTALL #####

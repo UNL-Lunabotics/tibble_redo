@@ -22,7 +22,7 @@
     </xacro:if>
 
     <xacro:if value="$(arg use_sim)">
-        <xacro:include filename="gazebo.xacro"/>
+        <xacro:include filename="mujoco_inputs.xacro"/>
     </xacro:if>
 
 </robot>

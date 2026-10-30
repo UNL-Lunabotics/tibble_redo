@@ -1,0 +1,99 @@
+%YAML 1.2
+---
+launch:
+  # Defaults are set to what you would use during a competition run
+  - arg:
+      # Accepted values:
+      # "real_teleop", "real_dual", "real_test"
+      # "sim_teleop", "sim_dual", "sim_test"
+      # Where _teleop means autonomy disabled and _dual means autonomy hotswapping enabled.
+      # Where real_test means using a mock hardware interface and sim_test means no controllers launched.
+      name: "mode"
+      default: "real_dual"
+      choice:
+        - value: "real_teleop"
+        - value: "real_dual"
+        - value: "real_test"
+        - value: "sim_teleop"
+        - value: "sim_dual"
+        - value: "sim_test"
+  - arg:
+      name: "use_wireless"
+      default: "false" # TODO: change for comp, this is for my sanity
+
+
+  # Infer finer parameters based on mode chosen
+  - let:
+      # Evaluates to true if the word sim is in the mode
+      name: "use_sim"
+      value: $(eval "'sim' in '$(var mode)'")
+  - let:
+      # Evaluates to true if mode is not sim_test (the only mode we don't use control)
+      name: "use_control"
+      value: "$(not-equals $(var mode) 'sim_test')"
+  - let:
+      # Evaluates to true if use_sim is true OR mode is real_test
+      name: "use_mock_hardware"
+      value: "$(or $(var use_sim) $(equals $(var mode) 'real_test'))"
+  - let:
+      name: "robot_name"
+      value: "tibble"
+
+
+  # Launch/configure/include common (everything uses it) things
+  - include:
+      file: "$(find-pkg-share bringup)/bringup/base.launch.yaml"
+      let:
+        - name: "robot_name"
+          value: "$(var robot_name)"
+        - name: "use_sim"
+          value: "$(var use_sim)"
+        - name: "use_control"
+          value: "$(var use_control)"
+        - name: "use_mock_hardware"
+          value: "$(var use_mock_hardware)"
+
+
+  # Controls launch
+  - include:
+      file: "$(find-pkg-share bringup)/bringup/control.launch.yaml"
+      let:
+        - name: "robot_name"
+          value: "$(var robot_name)"
+        # Launches custom controller if not in sim
+        # TODO: This may need to be changed someday, but for now its good
+        - name: "use_sim"
+          value: "$(var use_sim)"
+  
+
+  # Gamepad/joy launch
+  - include:
+      file: "$(find-pkg-share bringup)/bringup/gamepad.launch.yaml"
+      let:
+        - name: "robot_name"
+          value: "$(var robot_name)"
+        - name: "use_sim_time"
+          value: "$(var use_sim)"
+      unless: "$(var use_wireless)"
+
+
+  # Sim launch
+  - include:
+      file: "$(find-pkg-share bringup)/bringup/sim.launch.yaml"
+      let:
+        - name: "robot_name"
+          value: "$(var robot_name)"
+      if: "$(var use_sim)"
+
+
+  # Wireless launch
+  - include:
+      file: "$(find-pkg-share bringup)/bringup/wireless.launch.yaml"
+      let:
+        - name: "robot_name"
+          value: "$(var robot_name)"
+      if: "$(var use_wireless)"
+
+
+  # GUI launch (rerun)
+  # This should use an unless: wireless
