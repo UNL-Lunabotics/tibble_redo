@@ -76,9 +76,15 @@ class RobotSubscriber(Node):  # type: ignore[misc]
         self.subscribe("/tf_static", TFMessage, self.tf_callback, latching=True)
         self.subscribe("/diff_cont/odom", Odometry, self.odom_callback)
         self.subscribe("/scan", LaserScan, self.scan_callback)
-        self.subscribe("/camera/camera_info", CameraInfo, self.cam_info_callback)
-        self.subscribe("/camera/image", Image, self.image_callback)
-        self.subscribe("/camera/depth_image", Image, self.depth_callback)
+
+
+        # TODO: THIS WILL PROBABLY CONFLICT WITH MUJOCO MAKE THIS WORK WITH BOTH MODES AND PREFERABLY NOT HARD CODED
+        self.subscribe("/camera/depth_1/camera_info", CameraInfo, self.cam_info_callback)
+        self.subscribe("/camera/depth_1/color/image_raw", Image, self.image_callback)
+        self.subscribe("/camera/depth_1/depth/image_rect_raw", Image, self.depth_callback)
+        # self.subscribe("/camera/camera_info", CameraInfo, self.cam_info_callback)
+        # self.subscribe("/camera/image", Image, self.image_callback)
+        # self.subscribe("/camera/depth_image", Image, self.depth_callback)
         self.subscribe("/robot_description", String, self.urdf_callback, latching=True)        
         # The OccupancyGrid topics are not used by Tootles, but they are needed if 
         # you ever want to visuallize any kinds of maps in rerun.

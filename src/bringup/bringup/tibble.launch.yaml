@@ -102,6 +102,7 @@ launch:
         - name: "robot_name"
           value: "$(var robot_name)"
   
+
   # Camera launch
   - include:
       file: "$(find-pkg-share bringup)/bringup/camera.launch.yaml"
