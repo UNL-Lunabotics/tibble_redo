@@ -25,6 +25,11 @@
   <exec_depend>image_geometry</exec_depend>
   <exec_depend>laser_geometry</exec_depend>
 
+  <!-- LiDAR Odometry -->
+  <exec_depend>mola</exec_depend>
+  <exec_depend>mola_state_estimation</exec_depend>
+  <exec_depend>mola_lidar_odometry</exec_depend>
+
   <export>
     <build_type>ament_python</build_type>
   </export>
