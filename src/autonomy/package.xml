@@ -10,6 +10,9 @@
   <buildtool_depend>ament_cmake</buildtool_depend>
 
   <depend>nav2_core</depend>
+  <depend>librealsense2</depend>
+  <depend>realsense2_camera</depend>
+  <depend>realsense2_camera_msgs</depend>
 
   <export>
     <build_type>ament_cmake</build_type>
