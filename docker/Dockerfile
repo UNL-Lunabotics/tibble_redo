@@ -71,15 +71,24 @@ RUN pipx install platformio
 # MuJoCo Scene Editor
 RUN pipx install mujoco-scene-editor
 RUN pipx inject mujoco-scene-editor yourdfpy
+RUN pipx runpip mujoco-scene-editor install "numpy>=2.0.0,<2.8.0"
 
-
-# Rerun
-
-# Expose pipx's isolated Rerun packages so ROS 2 nodes can import them.
-ENV PYTHONPATH="${PIPX_HOME}/venvs/rerun-sdk/lib/python3.12/site-packages:${PYTHONPATH}"
-
+# Rerun SDK
 RUN pipx install rerun-sdk
-RUN pipx runpip rerun-sdk install --no-cache-dir "numpy<2" "pyarrow<19"
+RUN pipx runpip rerun-sdk install --no-cache-dir "numpy<2.0" "pyarrow<19"
+
+# Exposing NumPy will make mujoco-scene-editor
+# So, add all site-packages *except* for Numpy
+RUN SITE_PACKAGES="${PIPX_HOME}/venvs/rerun-sdk/lib/python3.12/site-packages" \
+    && mkdir -p /opt/rerun-python \
+    && find "$SITE_PACKAGES" -mindepth 1 -maxdepth 1 \
+        ! -name 'numpy' \
+        ! -name 'numpy-*' \
+        ! -name 'numpy.*' \
+        -exec ln -s '{}' /opt/rerun-python/ \;
+
+# Expose Rerun to ROS 2 Python nodes
+ENV PYTHONPATH="/opt/rerun-python${PYTHONPATH:+:${PYTHONPATH}}"
 
 
 #################### USER SETUP ####################
