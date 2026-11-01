@@ -77,7 +77,7 @@ RUN pipx runpip mujoco-scene-editor install "numpy>=2.0.0,<2.8.0"
 RUN pipx install rerun-sdk
 RUN pipx runpip rerun-sdk install --no-cache-dir "numpy<2.0" "pyarrow<19"
 
-# Exposing NumPy will make mujoco-scene-editor
+# Exposing NumPy will make mujoco-scene-editor break
 # So, add all site-packages *except* for Numpy
 RUN SITE_PACKAGES="${PIPX_HOME}/venvs/rerun-sdk/lib/python3.12/site-packages" \
     && mkdir -p /opt/rerun-python \
