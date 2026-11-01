@@ -101,3 +101,7 @@ launch:
       let:
         - name: "robot_name"
           value: "$(var robot_name)"
+
+  # Odometry launch
+  - include:
+      file: "$(find-pkg-share bringup)/bringup/odometry.launch.yaml"

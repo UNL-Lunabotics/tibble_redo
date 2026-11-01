@@ -1,0 +1,11 @@
+%YAML 1.2
+---
+launch:
+  # MOLA LiDAR Odometry
+  - include:
+      file: "$(find-pkg-share mola_lidar_odometry)/ros2-launchs/ros2-lidar-odometry.launch.py"
+      arg:
+        - name: "lidar_topic_name"
+          value: "/scan"
+        - name: "lidar_topic_type"
+          value: "LaserScan"
