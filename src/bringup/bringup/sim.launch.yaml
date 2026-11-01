@@ -11,7 +11,7 @@ launch:
 
   - let:
       name: "scene"
-      value: "$(find-pkg-share sim)/worlds/$(var world_name).mjcf"
+      value: "$(find-pkg-share sim)/worlds/$(var world_name).xml"
   
   # This node converts the urdf topic to mjcf format AND launches the gui
   - node:
