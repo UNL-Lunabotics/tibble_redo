@@ -96,4 +96,8 @@ launch:
 
 
   # GUI launch (rerun)
-  # This should use an unless: wireless
+  - include:
+      file: "$(find-pkg-share bringup)/bringup/gui.launch.yaml"
+      let:
+        - name: "robot_name"
+          value: "$(var robot_name)"

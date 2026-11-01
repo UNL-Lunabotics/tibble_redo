@@ -20,6 +20,10 @@ services:
 
     container_name: tibble_wired
 
+    ports:
+      - "9090:9090"
+      - "9876:9876"
+
     environment:
       - RMW_IMPLEMENTATION=rmw_fastrtps_cpp
 
@@ -35,13 +39,17 @@ services:
 
     container_name: tibble_wireless
 
+    ports:
+      - "9090:9090"
+      - "9876:9876"
+
     environment:
       - RMW_IMPLEMENTATION=rmw_zenoh_cpp
       - ZENOH_CONFIG=/docker/zenoh_client.json5
-    
+
     depends_on:
       - zenoh_router
-    
+
     profiles:
       - wireless
 

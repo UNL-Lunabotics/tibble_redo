@@ -19,6 +19,7 @@ ARG USER_GID=$USER_UID
 ENV DEBIAN_FRONTEND=noninteractive
 ENV LANG=en_US.UTF-8 LC_ALL=en_US.UTF-8
 ENV PYTHONPATH="${PYTHONPATH}:/usr/local/lib"
+ENV PYTHONPYCACHEPREFIX=/tmp/pycache
 
 
 #################### SYSTEM + DEV TOOLS ####################
@@ -57,8 +58,28 @@ RUN --mount=type=cache,target=/var/cache/apt \
     libxtst6
 
 
-#################### PLATFORMIO ####################
-RUN pipx install platformio && pipx ensurepath
+#################### PIPX INSTALLS ####################
+
+# Add pipx apps to path
+ENV PIPX_HOME=/opt/pipx
+ENV PIPX_BIN_DIR=/usr/local/bin
+ENV PATH="${PIPX_BIN_DIR}:${PATH}"
+
+# PlatformIO
+RUN pipx install platformio
+
+# MuJoCo Scene Editor
+RUN pipx install mujoco-scene-editor
+RUN pipx inject mujoco-scene-editor yourdfpy
+
+
+# Rerun
+
+# Expose pipx's isolated Rerun packages so ROS 2 nodes can import them.
+ENV PYTHONPATH="${PIPX_HOME}/venvs/rerun-sdk/lib/python3.12/site-packages:${PYTHONPATH}"
+
+RUN pipx install rerun-sdk
+RUN pipx runpip rerun-sdk install --no-cache-dir "numpy<2" "pyarrow<19"
 
 
 #################### USER SETUP ####################
@@ -73,7 +94,6 @@ RUN if ! id -u $USER_UID >/dev/null 2>&1; then \
 # Fedora host serial devices use GID 18 so add yourself just in case
 RUN groupadd -g 18 hostserial || true && \
     usermod -aG hostserial $USERNAME
-
 
 #################### ROS PACKAGES ####################
 # The .dockerignore will only allow package.xml files to be copied over
@@ -130,6 +150,7 @@ RUN echo "source /opt/ros/${ROS_DISTRO}/setup.bash" \
 #################### USER ENV ####################
 USER $USERNAME
 WORKDIR /home/${USERNAME}/workspaces/${REPO_NAME}/
+
 
 # This step sources the underlay and overlay so you can immediately run ros2 launch commands (if it's already built)
 RUN printf "\nsource /opt/ros/${ROS_DISTRO}/setup.bash\n" >> ~/.bashrc && \

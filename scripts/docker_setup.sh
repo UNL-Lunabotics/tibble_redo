@@ -2,9 +2,9 @@
 
 # -----------------------------------------------------------------------------
 # FILE:         docker_setup.sh
-# AUTHOR:       Ella Moody <moodyellam@gmail.com> (Linux and Windows), Aiden Kimmerling <https://github.com/TheKing349> (MacOS)
+# AUTHOR:       Ella Moody <moodyellam@gmail.com> (Linux and Windows), Aiden Kimmerling <https://github.com/TheKing349> (macOS)
 # CREATED:      07-02-2026
-# LAST EDITED:  07-29-2026
+# LAST EDITED:  10-15-2026
 # DESCRIPTION:  This script configures the HOST MACHINE to run the docker container
 #               setup for this repository. Run it before composing the containers,
 #               and in some cases run it anytime you restart your computer.
@@ -100,7 +100,7 @@ elif [[ $MAC == 1 ]]; then
     if [ ! -d "/opt/VirtualGL/bin" ]; then
         install_app_brew VirtualGL
     fi
-    /opt/VirtualGL/bin/vglclient -detach
+    /opt/VirtualGL/bin/vglclient -ipv6 -detach
 
     echo "[SUCCESS] macOS is configured. This will need to be ran every time you restart your computer."
 else
