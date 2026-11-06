@@ -112,3 +112,11 @@ launch:
         - name: "camera_name"
           value: "depth_1"
       unless: "$(var use_sim)"
+  
+  # LiDAR launch
+  - include:
+      file: "$(find-pkg-share bringup)/bringup/lidar.launch.yaml"
+      let:
+        - name: "robot_name"
+          value: "$(var robot_name)"
+      unless: "$(var use_sim)"
