@@ -74,7 +74,7 @@ class RobotSubscriber(Node):  # type: ignore[misc]
         # See the callback methods below for how each message type is handled.
         self.subscribe("/tf", TFMessage, self.tf_callback)
         self.subscribe("/tf_static", TFMessage, self.tf_callback, latching=True)
-        self.subscribe("/diff_cont/odom", Odometry, self.odom_callback)
+        self.subscribe("/odom", Odometry, self.odom_callback)
         self.subscribe("/scan", LaserScan, self.scan_callback)
         self.subscribe("/camera/camera_info", CameraInfo, self.cam_info_callback)
         self.subscribe("/camera/image", Image, self.image_callback)
