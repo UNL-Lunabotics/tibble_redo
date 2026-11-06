@@ -25,11 +25,16 @@
   <exec_depend>image_geometry</exec_depend>
   <exec_depend>laser_geometry</exec_depend>
 
+  <!-- Depth cameras -->
   <exec_depend>librealsense2</exec_depend>
   <exec_depend>realsense2_camera</exec_depend>
   <exec_depend>realsense2_camera_msgs</exec_depend>
 
+  <!-- LiDAR -->
   <exec_depend>rplidar_driver</exec_depend>
+
+  <!-- RTAB-Map -->
+  <exec_depend>rtabmap_launch</exec_depend>
 
   <export>
     <build_type>ament_python</build_type>
