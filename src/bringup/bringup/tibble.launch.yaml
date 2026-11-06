@@ -102,6 +102,9 @@ launch:
         - name: "robot_name"
           value: "$(var robot_name)"
 
-  # Odometry launch
-  - include:
-      file: "$(find-pkg-share bringup)/bringup/odometry.launch.yaml"
+  # Odometry launch (delayed)
+  - timer:
+      period: 10.0
+      children:
+        - include:
+            file: "$(find-pkg-share bringup)/bringup/odometry.launch.yaml"

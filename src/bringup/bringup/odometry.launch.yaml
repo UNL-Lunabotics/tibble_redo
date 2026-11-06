@@ -5,13 +5,26 @@ launch:
   - include:
       file: "$(find-pkg-share mola_lidar_odometry)/ros2-launchs/ros2-lidar-odometry.launch.py"
       arg:
+        # Required arguments
         - name: "lidar_topic_name"
           value: "/scan"
         - name: "lidar_topic_type"
           value: "LaserScan"
+
+        # Additional arguments
         - name: "mola_lo_pipeline"
           value: "$(find-pkg-share mola_lidar_odometry)/pipelines/lidar2d.yaml"
         - name: "ignore_lidar_pose_from_tf"
           value: "False"
         - name: "publish_localization_following_rep105"
           value: "True"
+        
+        # GUI
+        - name: "use_rviz"
+          value: "True"
+        - name: "use_mola_gui"
+          value: "True"
+
+        # Simulation
+        - name: "use_sim_time"
+          value: "$(var use_sim)"
