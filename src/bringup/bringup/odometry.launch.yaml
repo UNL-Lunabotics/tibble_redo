@@ -11,6 +11,12 @@ launch:
         - name: "lidar_topic_type"
           value: "LaserScan"
 
+        # IMU
+        - name: "imu_topic_name"
+          value: "/imu/out"
+        - name: "use_imu_for_lio"
+          value: "True"
+
         # Additional arguments
         - name: "mola_lo_pipeline"
           value: "$(find-pkg-share mola_lidar_odometry)/pipelines/lidar2d.yaml"
