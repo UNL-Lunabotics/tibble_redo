@@ -59,3 +59,11 @@ launch:
       param:
         - from: "$(find-pkg-share control)/config/$(var robot_name)_controller.yaml"
       if: "$(var use_sim)"
+
+  # IMU broadcaster for sim
+  - node:
+      pkg: "controller_manager"
+      exec: "spawner"
+      name: "imu_sensor_broadcaster"
+      args: "imu_sensor_broadcaster  --controller-ros-args '-r /imu_sensor_broadcaster/imu:=/imu/out -r /imu_sensor_broadcaster/transition_event:=/imu/transition_event'"
+      if: "$(var use_sim)"
