@@ -101,6 +101,25 @@ launch:
       let:
         - name: "robot_name"
           value: "$(var robot_name)"
+  
+
+  # Camera launch
+  - include:
+      file: "$(find-pkg-share bringup)/bringup/camera.launch.yaml"
+      let:
+        - name: "robot_name"
+          value: "$(var robot_name)"
+        - name: "camera_name"
+          value: "depth_1"
+      unless: "$(var use_sim)"
+  
+  # LiDAR launch
+  - include:
+      file: "$(find-pkg-share bringup)/bringup/lidar.launch.yaml"
+      let:
+        - name: "robot_name"
+          value: "$(var robot_name)"
+      unless: "$(var use_sim)"
 
   # Odometry launch (delayed)
   - timer:
