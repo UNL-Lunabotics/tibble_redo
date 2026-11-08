@@ -1,5 +1,5 @@
-#ifndef MOTOR_UTILS
-#define MOTOR_UTILS
+#ifndef MOTOR_UTILS_HPP
+#define MOTOR_UTILS_HPP
 
 #include <cmath>
 
@@ -62,4 +62,4 @@ struct PwmServo {
 
 } // namespace motor_utils
 
-#endif // MOTOR_UTILS
+#endif // MOTOR_UTILS_HPP
