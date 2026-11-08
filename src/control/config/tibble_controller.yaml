@@ -11,6 +11,9 @@ controller_manager:
     diff_drive_controller:
         type: "diff_drive_controller/DiffDriveController"
 
+    imu_sensor_broadcaster:
+      type: imu_sensor_broadcaster/IMUSensorBroadcaster
+
 tibble_controller:
   ros__parameters:
     command_topic: "/tibble_command"
@@ -85,3 +88,8 @@ diff_drive_controller:
     angular.z.max_deceleration_reverse: .NAN
     angular.z.max_jerk: .NAN
     angular.z.min_jerk: .NAN
+
+imu_sensor_broadcaster:
+  ros__parameters:
+    sensor_name: imu
+    frame_id: imu_link_optical

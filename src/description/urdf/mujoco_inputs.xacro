@@ -45,6 +45,12 @@
       <sensor>
         <plugin name="lidar" instance="lidar" objtype="site" objname="lidar_link_optical"/>
       </sensor>
+
+      <sensor>
+        <framequat name="imu_quat" objtype="site" objname="imu_link_optical" noise="0.0"/>
+        <gyro name="imu_gyro" site="imu_link_optical" noise="0.0"/>
+        <accelerometer name="imu_accel" site="imu_link_optical" noise="0.0"/>
+      </sensor>
     </raw_inputs>
 
     <!-- Specific inputs that require processing from the conversion script-->

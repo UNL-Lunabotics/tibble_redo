@@ -16,7 +16,7 @@ launch:
         - name: enable_gyro
           value: false
         - name: enable_accel
-          value: false
+          value: true
         - name: enable_depth
           value: true
         - name: enable_color
