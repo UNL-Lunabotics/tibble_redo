@@ -12,6 +12,6 @@
         camera:
           policy: streaming
           frame_name: camera_link_optical
-          info_topic: /camera/camera_info
-          image_topic: /camera/image
-          depth_topic: /camera/depth_image
+          info_topic: /camera/depth_1/camera_info
+          image_topic: /camera/depth_1/color/image_raw
+          depth_topic: /camera/depth_1/depth/image_rect_raw
