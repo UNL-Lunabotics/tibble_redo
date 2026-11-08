@@ -58,11 +58,6 @@ struct PwmServo {
   }
 };
 
-constexpr Rotary DriveLeft{/*gear*/ 0.0, /*cpr*/ 0.0, +1};
-constexpr Rotary DriveRight{0.0, 0.0, -1};
-constexpr Linear LinearAct{0.0};
-constexpr Rotary Excavation{0.0, 0.0, +1};
-
 } // namespace tibble_hardware_info
 
 #endif // TIBBLE_HARDWARE_INFO
