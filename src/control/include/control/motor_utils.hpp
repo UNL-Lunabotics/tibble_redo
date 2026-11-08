@@ -1,16 +1,17 @@
-#ifndef TIBBLE_HARDWARE_INFO
-#define TIBBLE_HARDWARE_INFO
+#ifndef MOTOR_UTILS
+#define MOTOR_UTILS
 
 #include <cmath>
 
-namespace tibble_hardware_info {
+namespace motor_utils {
 constexpr double kTwoPi = 2.0 * M_PI;
 constexpr double deg2rad(double d) { return d * M_PI / 180.0; }
 
 struct Rotary {
   double gear_ratio;  // motor revs per joint rev
   double encoder_cpr; // counts per motor rev (0 if N/A)
-  int direction;      // +1 / -1
+  int direction;      // +1 or -1
+
   // joint rad/s -> motor rev/s
   constexpr double joint_vel_to_motor_rps(double w) const {
     return direction * w / kTwoPi * gear_ratio;
@@ -21,8 +22,9 @@ struct Rotary {
 };
 
 struct Linear {
-  double motor_revs_per_m; // get from specs
-  int direction;
+  double motor_revs_per_m; // get from specs, m as in meter
+  int direction;           // +1 or -1
+
   constexpr double joint_vel_to_motor_rps(double v) const {
     return direction * v * motor_revs_per_m;
   }
@@ -40,7 +42,7 @@ struct PwmServo {
   double pulse_max_us;  // pulse at the other end
   double range_rad;     // total travel from min to max
   double zero_pulse_us; // starting/default pulse (position when urdf = 0)
-  int direction;        // +1 / -1 (set either here or in the URDF, not both)
+  int direction;        // +1 or -1 (set either here or in the URDF, not both)
 
   constexpr double rad_per_us() const {
     return range_rad / (pulse_max_us - pulse_min_us);
@@ -58,6 +60,6 @@ struct PwmServo {
   }
 };
 
-} // namespace tibble_hardware_info
+} // namespace motor_utils
 
-#endif // TIBBLE_HARDWARE_INFO
+#endif // MOTOR_UTILS
