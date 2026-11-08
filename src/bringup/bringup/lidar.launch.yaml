@@ -1,0 +1,15 @@
+%YAML 1.2
+---
+launch:
+  - arg:
+      name: "robot_name"
+      default: "robot"
+  - arg:
+      name: "params_file"
+      default: "$(find-pkg-share bringup)/config/rplidar.yaml"
+
+  - include:
+      file: "$(find-pkg-share rplidar_driver)/launch/rplidar.launch.py"
+      arg:
+        - name: "params_file"
+          value: "$(var params_file)"
