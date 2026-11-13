@@ -1,0 +1,23 @@
+%YAML 1.2
+---
+launch:
+  - arg:
+      name: "robot_name"
+      default: "robot"
+  - arg:
+      name: "camera_name"
+      default: "camera"
+
+  - node:
+      pkg: realsense2_camera
+      exec: realsense2_camera_node
+      name: "$(var camera_name)"
+      param:
+        - name: enable_gyro
+          value: false
+        - name: enable_accel
+          value: true
+        - name: enable_depth
+          value: true
+        - name: enable_color
+          value: true
