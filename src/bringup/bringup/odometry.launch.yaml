@@ -1,36 +1,61 @@
 %YAML 1.2
 ---
 launch:
-  # MOLA LiDAR Odometry
-  - include:
-      file: "$(find-pkg-share mola_lidar_odometry)/ros2-launchs/ros2-lidar-odometry.launch.py"
-      arg:
-        # Required arguments
-        - name: "lidar_topic_name"
-          value: "/scan"
-        - name: "lidar_topic_type"
-          value: "LaserScan"
+  - group:
+      # Remap MOLA's Odometry output
+      - set_remap:
+          from: "/lidar_odometry/pose"
+          to: "/odom"
 
-        # IMU
-        - name: "imu_topic_name"
-          value: "/imu/out"
-        - name: "use_imu_for_lio"
-          value: "True"
+      - include:
+          file: "$(find-pkg-share mola_lidar_odometry)/ros2-launchs/ros2-lidar-odometry.launch.py"
+          arg:
+            # LiDAR
+            - name: "lidar_topic_name"
+              value: "/scan"
+            - name: "lidar_topic_type"
+              value: "LaserScan"
 
-        # Additional arguments
-        - name: "mola_lo_pipeline"
-          value: "$(find-pkg-share mola_lidar_odometry)/pipelines/lidar2d.yaml"
-        - name: "ignore_lidar_pose_from_tf"
-          value: "False"
-        - name: "publish_localization_following_rep105"
-          value: "True"
-        
-        # GUI
-        - name: "use_rviz"
-          value: "True"
-        - name: "use_mola_gui"
-          value: "True"
+            # IMU
+            - name: "imu_topic_name"
+              value: "/imu/out"
+            - name: "use_imu_for_lio"
+              value: "True"
 
-        # Simulation
-        - name: "use_sim_time"
-          value: "$(var use_sim)"
+            # Pipeline
+            - name: "mola_lo_pipeline"
+              value: "$(find-pkg-share mola_lidar_odometry)/pipelines/lidar2d.yaml"
+
+            # Estimator
+            - name: "use_state_estimator"
+              value: "False"
+
+            # TF
+            - name: "mola_tf_base_link"
+              value: "base_link"
+            - name: "mola_lo_reference_frame"
+              value: "odom"
+            - name: "publish_localization_following_rep105"
+              value: "False"
+
+            # Internal local mapping
+            - name: "start_mapping_enabled"
+              value: "True"
+            - name: "publish_local_map"
+              value: "False"
+
+            # Sensor transforms
+            - name: "ignore_lidar_pose_from_tf"
+              value: "False"
+            - name: "ignore_imu_pose_from_tf"
+              value: "False"
+
+            # GUI
+            - name: "use_rviz"
+              value: "False"
+            - name: "use_mola_gui"
+              value: "False"
+
+            # Simulation
+            - name: "use_sim_time"
+              value: "$(var use_sim)"
