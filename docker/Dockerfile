@@ -82,10 +82,10 @@ RUN pipx runpip rerun-sdk install --no-cache-dir "numpy<2.0" "pyarrow<19"
 RUN SITE_PACKAGES="${PIPX_HOME}/venvs/rerun-sdk/lib/python3.12/site-packages" \
     && mkdir -p /opt/rerun-python \
     && find "$SITE_PACKAGES" -mindepth 1 -maxdepth 1 \
-        ! -name 'numpy' \
-        ! -name 'numpy-*' \
-        ! -name 'numpy.*' \
-        -exec ln -s '{}' /opt/rerun-python/ \;
+    ! -name 'numpy' \
+    ! -name 'numpy-*' \
+    ! -name 'numpy.*' \
+    -exec ln -s '{}' /opt/rerun-python/ \;
 
 # Expose Rerun to ROS 2 Python nodes
 ENV PYTHONPATH="/opt/rerun-python${PYTHONPATH:+:${PYTHONPATH}}"
@@ -147,6 +147,16 @@ RUN wget -q -O- https://packagecloud.io/dcommander/virtualgl/gpgkey | \
 RUN wget -O /etc/apt/sources.list.d/VirtualGL.list https://raw.githubusercontent.com/VirtualGL/repo/main/VirtualGL.list
 
 RUN apt-get update && apt-get install -y --no-install-recommends virtualgl
+
+
+#################### MuJoCo Python Environment ####################
+ENV ROS2_CONTROL_VENV="/home/${USERNAME}/.ros/ros2_control/.venv"
+ENV PATH="${ROS2_CONTROL_VENV}/bin:${PATH}"
+
+RUN python3 -m venv --system-site-packages "${ROS2_CONTROL_VENV}" \
+    && python -m pip install --no-input --no-cache-dir --disable-pip-version-check \
+    -r "/opt/ros/${ROS_DISTRO}/share/mujoco_ros2_control/requirements.txt" \
+    && chown -R "${USERNAME}:${USERNAME}" "/home/${USERNAME}/.ros"
 
 
 #################### ROS ENV ####################
