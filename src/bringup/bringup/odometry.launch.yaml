@@ -26,17 +26,9 @@ launch:
             - name: "mola_lo_pipeline"
               value: "$(find-pkg-share mola_lidar_odometry)/pipelines/lidar2d.yaml"
 
-            # Estimator
-            - name: "use_state_estimator"
-              value: "False"
-
             # TF
-            - name: "mola_tf_base_link"
-              value: "base_link"
             - name: "mola_lo_reference_frame"
               value: "odom"
-            - name: "publish_localization_following_rep105"
-              value: "False"
 
             # Internal local mapping
             - name: "start_mapping_enabled"
@@ -59,3 +51,9 @@ launch:
             # Simulation
             - name: "use_sim_time"
               value: "$(var use_sim)"
+
+            # Unneeded Topics
+            - name: "gnss_topic_name"
+              value: ""
+            - name: "gpsfix_topic_name"
+              value: ""
