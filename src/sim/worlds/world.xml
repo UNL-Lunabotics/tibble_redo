@@ -7,6 +7,9 @@
     <joint damping="0.1" frictionloss="0.01" />
   </default>
 
+  <!-- Only used to run the world editor, comment out when not needed -->
+  <!-- <compiler texturedir="/home/ubuntu/workspaces/tibble_redo/src/sim/worlds/textures"/> -->
+
   <asset>
     <texture name="tag_tex" type="2d" file="tag36h11_0.png" />
     <material name="tag_mat" texture="tag_tex" texuniform="false" specular="0" shininess="0" />
