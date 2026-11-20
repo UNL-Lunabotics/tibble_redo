@@ -73,22 +73,8 @@ RUN pipx install mujoco-scene-editor
 RUN pipx inject mujoco-scene-editor yourdfpy
 RUN pipx runpip mujoco-scene-editor install "numpy>=2.0.0,<2.8.0"
 
-# Rerun SDK
-RUN pipx install rerun-sdk
-RUN pipx runpip rerun-sdk install --no-cache-dir "numpy<2.0" "pyarrow<19"
-
-# Exposing NumPy will make mujoco-scene-editor break
-# So, add all site-packages *except* for Numpy
-RUN SITE_PACKAGES="${PIPX_HOME}/venvs/rerun-sdk/lib/python3.12/site-packages" \
-    && mkdir -p /opt/rerun-python \
-    && find "$SITE_PACKAGES" -mindepth 1 -maxdepth 1 \
-    ! -name 'numpy' \
-    ! -name 'numpy-*' \
-    ! -name 'numpy.*' \
-    -exec ln -s '{}' /opt/rerun-python/ \;
-
-# Expose Rerun to ROS 2 Python nodes
-ENV PYTHONPATH="/opt/rerun-python${PYTHONPATH:+:${PYTHONPATH}}"
+# ros-rerun-bridge
+RUN pipx install ros-rerun-bridge
 
 
 #################### USER SETUP ####################
