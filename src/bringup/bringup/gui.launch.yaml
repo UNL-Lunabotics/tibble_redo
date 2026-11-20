@@ -2,5 +2,5 @@
 ---
 launch:
     - executable:
-          cmd: "ros-rerun-bridge --auto --config $(find-pkg-share bringup)/config/rerun_bridge.yaml"
+          cmd: "ros-rerun-bridge --auto --config $(find-pkg-share bringup)/config/rerun_bridge.yaml --serve"
           output: screen
