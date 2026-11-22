@@ -1,0 +1,27 @@
+%YAML 1.2
+---
+launch:
+  - arg:
+      name: "camera_name"
+      default: "depth_1"
+  - arg:
+      name: "use_sim_time"
+      default: "false"
+
+  - group:
+      - set_remap:
+          from: "image_rect"
+          to: "/camera/$(var camera_name)/color/image_raw"
+      - set_remap:
+          from: "camera_info"
+          to: "/camera/$(var camera_name)/color/camera_info"
+
+      - node:
+          pkg: "apriltag_ros"
+          exec: "apriltag_node"
+          name: "apriltag"
+          output: "screen"
+          param:
+            - from: "$(find-pkg-share bringup)/config/apriltag.yaml"
+            - name: "use_sim_time"
+              value: "$(var use_sim_time)"

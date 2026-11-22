@@ -23,3 +23,15 @@ launch:
           value: true
         - name: unite_imu_method
           value: 2   # 0=none, 1=copy, 2=linear_interpolation
+
+        # Increase shutter speed to reduce motion blur in the AprilTag image.
+        - name: rgb_camera.color_profile
+          value: "424x240x60"
+        - name: rgb_camera.enable_auto_exposure
+          value: false
+        - name: rgb_camera.auto_exposure_priority
+          value: false
+        - name: rgb_camera.exposure
+          value: 300
+        - name: rgb_camera.gain
+          value: 128

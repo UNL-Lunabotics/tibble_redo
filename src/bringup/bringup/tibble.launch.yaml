@@ -64,7 +64,7 @@ launch:
         # TODO: This may need to be changed someday, but for now its good
         - name: "use_sim"
           value: "$(var use_sim)"
-  
+
 
   # Gamepad/joy launch
   - include:
@@ -98,7 +98,7 @@ launch:
   # GUI launch (rerun)
   - include:
       file: "$(find-pkg-share bringup)/bringup/gui.launch.yaml"
-  
+
 
   # Camera launch
   - include:
@@ -109,7 +109,19 @@ launch:
         - name: "camera_name"
           value: "depth_1"
       unless: "$(var use_sim)"
-  
+
+
+  # AprilTag launch
+  - include:
+      file: "$(find-pkg-share bringup)/bringup/apriltag.launch.yaml"
+      let:
+        - name: "camera_name"
+          value: "depth_1"
+        - name: "use_sim_time"
+          value: "$(var use_sim)"
+      unless: "$(var use_sim)"
+
+
   # LiDAR launch
   - include:
       file: "$(find-pkg-share bringup)/bringup/lidar.launch.yaml"
@@ -117,6 +129,7 @@ launch:
         - name: "robot_name"
           value: "$(var robot_name)"
       unless: "$(var use_sim)"
+
 
   # Odometry launch (delayed)
   - timer:

@@ -1,0 +1,42 @@
+/**:
+    ros__parameters:
+        image_transport: raw    # image format
+        family: 36h11           # tag family name
+        size: 0.162             # tag edge size in meter
+        max_hamming: 1          # allow one bit correction for noisier/farther views
+        qos_profile: default    # optional qos_profile, "sensor_data", "default", or "system_default"
+
+        # see "apriltag.h" 'struct apriltag_detector' for more documentation on these optional parameters
+        detector:
+            threads: 1          # number of threads
+            decimate: 1.0       # decimate resolution for quad detection
+            blur: 0.3           # slight blur can improve robustness on noisy edges
+            refine: True        # snap to strong gradients
+            sharpening: 0.40    # a bit more sharpening helps preserve tag edges
+            debug: False        # write additional debugging images to current working directory
+
+
+        pose_estimation_method: "pnp"   # method for estimating the tag pose
+
+        # optional list of tags
+        tag:
+            ids: [0]                # tag ID
+            frames: [base]          # optional frame name
+            sizes: [0.162]          # optional tag-specific edge size
+
+        # optional list of tag bundles
+        tag_bundles:
+            bundle_names: ['bundle1', 'bundle2']
+            bundle1:
+                ids: [0, 1] # tag IDs in bundle
+                "0":
+                    size: 0.1
+                    transform: [-0.25, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0] # [x, y, z, qw, qx, qy, qz]
+                "1":
+                    size: 0.1
+                    transform: [0.25, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0] # [x, y, z, qw, qx, qy, qz]
+            bundle2:
+                ids: [0] # tag IDs in bundle
+                "0":
+                    size: 0.1
+                    transform: [-0.25, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0] # [x, y, z, qw, qx, qy, qz]

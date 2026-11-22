@@ -30,6 +30,10 @@
   <exec_depend>realsense2_camera</exec_depend>
   <exec_depend>realsense2_camera_msgs</exec_depend>
 
+  <!-- AprilTag detection -->
+  <exec_depend>apriltag_ros</exec_depend>
+  <exec_depend>apriltag_msgs</exec_depend>
+
   <!-- LiDAR -->
   <exec_depend>rplidar_driver</exec_depend>
 
