@@ -98,9 +98,6 @@ launch:
   # GUI launch (rerun)
   - include:
       file: "$(find-pkg-share bringup)/bringup/gui.launch.yaml"
-      let:
-        - name: "robot_name"
-          value: "$(var robot_name)"
   
 
   # Camera launch
@@ -120,3 +117,10 @@ launch:
         - name: "robot_name"
           value: "$(var robot_name)"
       unless: "$(var use_sim)"
+
+  # Odometry launch (delayed)
+  - timer:
+      period: 10.0
+      children:
+        - include:
+            file: "$(find-pkg-share bringup)/bringup/odometry.launch.yaml"

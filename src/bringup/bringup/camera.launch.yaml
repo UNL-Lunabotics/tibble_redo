@@ -14,10 +14,12 @@ launch:
       name: "$(var camera_name)"
       param:
         - name: enable_gyro
-          value: false
+          value: true
         - name: enable_accel
           value: true
         - name: enable_depth
           value: true
         - name: enable_color
           value: true
+        - name: unite_imu_method
+          value: 2   # 0=none, 1=copy, 2=linear_interpolation

@@ -36,6 +36,11 @@
   <!-- RTAB-Map -->
   <exec_depend>rtabmap_launch</exec_depend>
 
+  <!-- LiDAR Odometry -->
+  <exec_depend>mola</exec_depend>
+  <exec_depend>mola_state_estimation</exec_depend>
+  <exec_depend>mola_lidar_odometry</exec_depend>
+
   <export>
     <build_type>ament_python</build_type>
   </export>

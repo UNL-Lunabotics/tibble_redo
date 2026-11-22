@@ -1,0 +1,25 @@
+global_frame: odom
+modules:
+    - name: camera_color
+      module: image
+      topic: /camera/depth_1/color/image_raw
+      entity_path: camera/depth_1/color/image_raw
+
+    - name: camera_depth
+      module: depth_image
+      topic: /camera/depth_1/depth/image_rect_raw
+      entity_path: camera/depth_1/depth/image_rect_raw
+      params:
+          depth_range: [0.0, 10.0]
+
+    - name: camera_info
+      module: camera_info
+      topic: /camera/depth_1/camera_info
+      entity_path: camera/depth_1/camera_info
+
+    - name: scan
+      module: laserscan
+      topic: /scan
+      entity_path: scan
+      params:
+          mode: points

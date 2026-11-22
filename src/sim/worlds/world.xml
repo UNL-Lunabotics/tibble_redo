@@ -3,7 +3,7 @@
   <compiler angle="radian" />
   <option timestep="0.002" gravity="0 0 -9.81" />
   <default>
-    <geom friction="1.0 0.8 0.01" condim="4" />
+    <geom friction="1.0 0.005 0.01" condim="3" />
     <joint damping="0.1" frictionloss="0.01" />
   </default>
 
@@ -16,7 +16,8 @@
   </asset>
 
   <worldbody>
-    <light directional="true" pos="0 0 5" dir="0 0 -1" diffuse="0.8 0.8 0.8" specular="0.2 0.2 0.2" castshadow="false"/>
+    <light directional="true" pos="0 0 5" dir="0 0 -1" diffuse="0.8 0.8 0.8" specular="0.2 0.2 0.2"
+      castshadow="false" />
 
     <body name="ground_plane" pos="0 0 0">
       <inertial mass="1" pos="0 0 0" diaginertia="1 1 1" />
@@ -73,4 +74,7 @@
       <geom type="cylinder" size="0.5 0.5" rgba="0.2 0.4 0.9 1" />
     </body>
   </worldbody>
+  <visual>
+    <map zfar="0.5" />
+  </visual>
 </mujoco>
