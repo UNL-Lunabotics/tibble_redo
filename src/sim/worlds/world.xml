@@ -74,7 +74,7 @@
       <geom type="cylinder" size="0.5 0.5" rgba="0.2 0.4 0.9 1" />
     </body>
   </worldbody>
-  <visual>
+  <!-- <visual>
     <map zfar="0.5" />
-  </visual>
+  </visual> -->
 </mujoco>
